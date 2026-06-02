@@ -2,6 +2,7 @@ package schema
 
 import (
 	"encoding/json"
+	"strings"
 	"testing"
 )
 
@@ -62,9 +63,36 @@ func TestPlanJSONSerializable(t *testing.T) {
 	}
 }
 
+func TestPlanMarkdownSerializable(t *testing.T) {
+	plan := Plan{
+		Objective: "convert json to csv",
+		Source:    "json",
+		Target:    "csv",
+		Operation: "convert",
+		Steps:     []string{"inspect json", "convert into csv"},
+	}
+
+	md := plan.MarshalMarkdown()
+	if md == "" {
+		t.Fatal("expected markdown output")
+	}
+	if !containsAll(md, []string{"Objective:", "Source:", "Target:", "Operation:"}) {
+		t.Fatalf("unexpected markdown output: %q", md)
+	}
+}
+
 func TestInferPlan_EmptySummary(t *testing.T) {
 	_, err := InferPlan("convert json to csv", Summary{}, "csv")
 	if err == nil {
 		t.Fatal("expected error for empty summary")
 	}
+}
+
+func containsAll(s string, parts []string) bool {
+	for _, part := range parts {
+		if !strings.Contains(s, part) {
+			return false
+		}
+	}
+	return true
 }

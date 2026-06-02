@@ -378,10 +378,10 @@ Cada vez que se avance, actualizar este bloque con información concreta.
 [IA-STEP]
 fecha: 2026-06-02
 etapa: ETAPA_2
-subtarea: estructura Plan e inferencia mínima
+subtarea: serialización Markdown del plan
 estado: completado
-resultado: agrega plan serializable, operación inferida y pruebas básicas
-siguiente: enriquecer la traducción del prompt y la serialización del plan
+resultado: agrega render Markdown del plan y pruebas de serialización
+siguiente: enriquecer la traducción del prompt y el rechazo de ambigüedad
 bloqueos: ninguno
 [/IA-STEP]
 ```
