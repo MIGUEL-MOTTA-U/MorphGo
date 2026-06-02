@@ -34,11 +34,31 @@ func TestGenerateMain_KnownPlan(t *testing.T) {
 	if !strings.Contains(code, "if err := run(); err != nil") {
 		t.Fatal("expected basic error handling")
 	}
+	if count := strings.Count(code, "func "); count != 2 {
+		t.Fatalf("expected exactly 2 functions, got %d", count)
+	}
 }
 
 func TestGenerateMain_MissingData(t *testing.T) {
 	_, err := GenerateMain(schema.Plan{})
 	if err == nil {
 		t.Fatal("expected error for incomplete plan")
+	}
+}
+
+func TestGenerateMain_NotEmpty(t *testing.T) {
+	plan := schema.Plan{
+		Objective: "convert json to csv",
+		Source:    "json",
+		Target:    "csv",
+		Operation: "convert",
+	}
+
+	code, err := GenerateMain(plan)
+	if err != nil {
+		t.Fatalf("GenerateMain returned error: %v", err)
+	}
+	if strings.TrimSpace(code) == "" {
+		t.Fatal("expected non-empty generated code")
 	}
 }

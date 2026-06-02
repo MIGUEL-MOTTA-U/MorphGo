@@ -378,10 +378,10 @@ Cada vez que se avance, actualizar este bloque con información concreta.
 [IA-STEP]
 fecha: 2026-06-02
 etapa: ETAPA_3
-subtarea: imports y manejo de errores
+subtarea: no vaci\\u00edo y no duplicados
 estado: completado
-resultado: genera un main.go con imports válidos y error handling básico
-siguiente: cerrar la etapa de generación con cobertura de no duplicados
+resultado: asegura que el código generado no quede vacío y solo tenga dos funciones
+siguiente: cerrar la etapa de generación
 bloqueos: ninguno
 [/IA-STEP]
 ```
