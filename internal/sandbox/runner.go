@@ -2,8 +2,11 @@ package sandbox
 
 import (
 	"context"
+	"errors"
+	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 	"time"
 )
 
@@ -20,18 +23,48 @@ func RunMain(mainPath string, timeout time.Duration) (Result, error) {
 	defer cancel()
 
 	dir := filepath.Dir(mainPath)
-	cmd := exec.CommandContext(ctx, "go", "run", ".")
-	cmd.Dir = dir
+	binPath := filepath.Join(dir, "morphgo-runner.exe")
+	if err := buildBinary(ctx, dir, binPath); err != nil {
+		return Result{Stderr: err.Error(), ExitCode: 1}, err
+	}
+	defer os.Remove(binPath)
 
+	res, err := execBinary(ctx, binPath, dir)
+	if err != nil {
+		return res, err
+	}
+	return res, nil
+}
+
+func buildBinary(ctx context.Context, dir, binPath string) error {
+	cmd := exec.CommandContext(ctx, "go", "build", "-o", binPath, ".")
+	cmd.Dir = dir
 	out, err := cmd.CombinedOutput()
-	res := Result{Stdout: string(out), ExitCode: 0}
+	if err != nil {
+		if ctx.Err() == context.DeadlineExceeded {
+			return ctx.Err()
+		}
+		if len(out) > 0 {
+			return errors.New(string(out))
+		}
+		return err
+	}
+	return nil
+}
+
+func execBinary(ctx context.Context, binPath, dir string) (Result, error) {
+	cmd := exec.CommandContext(ctx, binPath)
+	cmd.Dir = dir
+	var stdout, stderr strings.Builder
+	cmd.Stdout = &stdout
+	cmd.Stderr = &stderr
+	err := cmd.Run()
+	res := Result{Stdout: stdout.String(), Stderr: stderr.String(), ExitCode: 0}
 	if err != nil {
 		res.ExitCode = 1
 		if ctx.Err() == context.DeadlineExceeded {
-			res.Stderr = ctx.Err().Error()
 			return res, ctx.Err()
 		}
-		res.Stderr = err.Error()
 		return res, err
 	}
 	return res, nil

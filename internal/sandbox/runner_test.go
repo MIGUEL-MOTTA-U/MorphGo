@@ -42,3 +42,41 @@ func TestRunMain_Timeout(t *testing.T) {
 		t.Fatal("expected timeout error")
 	}
 }
+
+func TestRunMain_CompileError(t *testing.T) {
+	dir := t.TempDir()
+	if err := os.WriteFile(filepath.Join(dir, "go.mod"), []byte("module tempgen\ngo 1.26.3\n"), 0o600); err != nil {
+		t.Fatalf("write go.mod: %v", err)
+	}
+	mainPath := filepath.Join(dir, "main.go")
+	if err := os.WriteFile(mainPath, []byte("package main\nfunc main(){broken}\n"), 0o600); err != nil {
+		t.Fatalf("write main.go: %v", err)
+	}
+
+	_, err := RunMain(mainPath, 5*time.Second)
+	if err == nil {
+		t.Fatal("expected compile error")
+	}
+}
+
+func TestRunMain_RuntimeError(t *testing.T) {
+	dir := t.TempDir()
+	if err := os.WriteFile(filepath.Join(dir, "go.mod"), []byte("module tempgen\ngo 1.26.3\n"), 0o600); err != nil {
+		t.Fatalf("write go.mod: %v", err)
+	}
+	mainPath := filepath.Join(dir, "main.go")
+	if err := os.WriteFile(mainPath, []byte(`package main
+import "os"
+func main(){os.Exit(1)}
+`), 0o600); err != nil {
+		t.Fatalf("write main.go: %v", err)
+	}
+
+	res, err := RunMain(mainPath, 5*time.Second)
+	if err == nil {
+		t.Fatal("expected runtime error")
+	}
+	if res.ExitCode == 0 {
+		t.Fatal("expected non-zero exit code")
+	}
+}

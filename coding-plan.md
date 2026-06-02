@@ -378,10 +378,10 @@ Cada vez que se avance, actualizar este bloque con información concreta.
 [IA-STEP]
 fecha: 2026-06-02
 etapa: ETAPA_4
-subtarea: runner de sandbox
+subtarea: captura separada de salida
 estado: completado
-resultado: ejecuta main.go temporal con timeout y captura salida
-siguiente: capturar stdout, stderr y errores de compilaci\u00f3n por separado
+resultado: separa compilaci\u00f3n y ejecuci\u00f3n, capturando stdout y stderr
+siguiente: limpieza de temporales y timeout final
 bloqueos: ninguno
 [/IA-STEP]
 ```
