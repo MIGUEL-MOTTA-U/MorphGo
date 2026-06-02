@@ -41,3 +41,23 @@ func TestInspectPDF_Invalid(t *testing.T) {
 		t.Fatal("expected error for invalid pdf")
 	}
 }
+
+func TestInspectPDF_EmptyFile(t *testing.T) {
+	dir := t.TempDir()
+	path := filepath.Join(dir, "empty.pdf")
+	if err := os.WriteFile(path, nil, 0o600); err != nil {
+		t.Fatalf("write pdf: %v", err)
+	}
+
+	_, err := InspectPDF(path)
+	if err == nil {
+		t.Fatal("expected error for empty file")
+	}
+}
+
+func TestInspectPDF_FileNotFound(t *testing.T) {
+	_, err := InspectPDF(filepath.Join(t.TempDir(), "missing.pdf"))
+	if err == nil {
+		t.Fatal("expected error for missing file")
+	}
+}
