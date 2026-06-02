@@ -1,6 +1,9 @@
 package codeact
 
 import (
+	"os"
+	"os/exec"
+	"path/filepath"
 	"strings"
 	"testing"
 
@@ -60,5 +63,34 @@ func TestGenerateMain_NotEmpty(t *testing.T) {
 	}
 	if strings.TrimSpace(code) == "" {
 		t.Fatal("expected non-empty generated code")
+	}
+}
+
+func TestGenerateMain_CompilesInHappyPath(t *testing.T) {
+	plan := schema.Plan{
+		Objective: "convert json to csv",
+		Source:    "json",
+		Target:    "csv",
+		Operation: "convert",
+	}
+
+	code, err := GenerateMain(plan)
+	if err != nil {
+		t.Fatalf("GenerateMain returned error: %v", err)
+	}
+
+	dir := t.TempDir()
+	if err := os.WriteFile(filepath.Join(dir, "main.go"), []byte(code), 0o600); err != nil {
+		t.Fatalf("write generated code: %v", err)
+	}
+	if err := os.WriteFile(filepath.Join(dir, "go.mod"), []byte("module tempgen\ngo 1.26.3\n"), 0o600); err != nil {
+		t.Fatalf("write go.mod: %v", err)
+	}
+
+	cmd := exec.Command("go", "test", ".")
+	cmd.Dir = dir
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		t.Fatalf("generated code did not compile: %v\n%s", err, string(out))
 	}
 }

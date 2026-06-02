@@ -378,9 +378,9 @@ Cada vez que se avance, actualizar este bloque con información concreta.
 [IA-STEP]
 fecha: 2026-06-02
 etapa: ETAPA_3
-subtarea: no vaci\\u00edo y no duplicados
+subtarea: compilaci\u00f3n en caso feliz
 estado: completado
-resultado: asegura que el código generado no quede vacío y solo tenga dos funciones
+resultado: genera un main.go temporal que compila en un módulo limpio
 siguiente: cerrar la etapa de generación
 bloqueos: ninguno
 [/IA-STEP]
