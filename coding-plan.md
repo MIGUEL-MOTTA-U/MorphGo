@@ -377,11 +377,11 @@ Cada vez que se avance, actualizar este bloque con información concreta.
 ```text
 [IA-STEP]
 fecha: 2026-06-02
-etapa: ETAPA_4
-subtarea: cierre de sandbox
+etapa: ETAPA_5
+subtarea: reintentos limitados
 estado: completado
-resultado: sandbox integrado con generaci\u00f3n, timeout, cleanup y captura de salida
-siguiente: iniciar feedback loop y autocorrecci\u00f3n
+resultado: clasifica errores simples y reintenta con l\u00edmite y trazabilidad
+siguiente: detener el loop ante errores repetidos
 bloqueos: ninguno
 [/IA-STEP]
 ```
