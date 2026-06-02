@@ -378,9 +378,9 @@ Cada vez que se avance, actualizar este bloque con información concreta.
 [IA-STEP]
 fecha: 2026-06-02
 etapa: ETAPA_5
-subtarea: detenci\u00f3n por error repetido
+subtarea: errores sentinela del loop
 estado: completado
-resultado: compara una huella normalizada del error y corta el loop
+resultado: distingue claramente error repetido y l\u00edmite de intentos
 siguiente: cerrar la autocorrecci\u00f3n
 bloqueos: ninguno
 [/IA-STEP]

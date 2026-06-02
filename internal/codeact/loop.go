@@ -9,6 +9,11 @@ import (
 	"morphgo/internal/schema"
 )
 
+var (
+	ErrMaxAttempts   = errors.New("max attempts reached")
+	ErrRepeatedError = errors.New("repeated error")
+)
+
 // PrepareTempMain generates and writes the temporary main.go for a run.
 func PrepareTempMain(plan schema.Plan) (string, error) {
 	code, err := GenerateMain(plan)
@@ -54,7 +59,7 @@ func retryRunPlan(
 			attempt.Error = err.Error()
 			history = append(history, attempt)
 			if attempt.fingerprint() == lastFingerprint {
-				return sandbox.Result{}, history, errors.New("repeated error")
+				return sandbox.Result{}, history, ErrRepeatedError
 			}
 			lastFingerprint = attempt.fingerprint()
 			continue
@@ -66,7 +71,7 @@ func retryRunPlan(
 			attempt.Error = err.Error()
 			history = append(history, attempt)
 			if attempt.fingerprint() == lastFingerprint {
-				return sandbox.Result{}, history, errors.New("repeated error")
+				return sandbox.Result{}, history, ErrRepeatedError
 			}
 			lastFingerprint = attempt.fingerprint()
 			continue
@@ -89,12 +94,12 @@ func retryRunPlan(
 		attempt.ExitCode = res.ExitCode
 		history = append(history, attempt)
 		if attempt.fingerprint() == lastFingerprint {
-			return res, history, errors.New("repeated error")
+			return res, history, ErrRepeatedError
 		}
 		lastFingerprint = attempt.fingerprint()
 	}
 
-	return sandbox.Result{}, history, errors.New("max attempts reached")
+	return sandbox.Result{}, history, ErrMaxAttempts
 }
 
 func classifyRunError(res sandbox.Result, err error) string {

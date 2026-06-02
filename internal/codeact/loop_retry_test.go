@@ -51,6 +51,7 @@ func TestRetryRunPlan_CompileCorrection(t *testing.T) {
 
 func TestRetryRunPlan_AbandonsAfterNAttempts(t *testing.T) {
 	plan := schema.Plan{Objective: "x", Source: "a", Target: "b", Operation: "convert"}
+	runs := 0
 	_, history, err := retryRunPlan(
 		plan,
 		time.Second,
@@ -58,17 +59,24 @@ func TestRetryRunPlan_AbandonsAfterNAttempts(t *testing.T) {
 		func(schema.Plan) (string, error) { return "code", nil },
 		func(code string) (string, error) { return code, nil },
 		func(mainPath string, timeout time.Duration) (sandbox.Result, error) {
-			return sandbox.Result{Stderr: "runtime panic"}, errors.New("runtime failed")
+			runs++
+			return sandbox.Result{Stderr: "runtime panic " + string(rune('a'+runs))}, errors.New("runtime failed ")
 		},
 	)
 	if err == nil {
 		t.Fatal("expected error after max attempts")
+	}
+	if !errors.Is(err, ErrMaxAttempts) {
+		t.Fatalf("expected ErrMaxAttempts, got %v", err)
 	}
 	if len(history) != 2 {
 		t.Fatalf("expected 2 attempts, got %#v", history)
 	}
 	if history[0].Stage != "runtime" || history[1].Stage != "runtime" {
 		t.Fatalf("expected runtime attempts, got %#v", history)
+	}
+	if runs != 2 {
+		t.Fatalf("expected 2 runs, got %d", runs)
 	}
 }
 
@@ -89,6 +97,9 @@ func TestRetryRunPlan_RepeatedErrorStopsEarly(t *testing.T) {
 	)
 	if err == nil {
 		t.Fatal("expected repeated error")
+	}
+	if !errors.Is(err, ErrRepeatedError) {
+		t.Fatalf("expected ErrRepeatedError, got %v", err)
 	}
 	if len(history) != 2 {
 		t.Fatalf("expected two repeated attempts, got %#v", history)
