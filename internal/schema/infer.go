@@ -41,18 +41,29 @@ func InferPlan(prompt string, summary Summary, target string) (Plan, error) {
 
 func detectOperation(prompt string) string {
 	p := strings.ToLower(prompt)
+	matches := 0
+	op := ""
 	switch {
 	case strings.Contains(p, "convert") || strings.Contains(p, "convertir") || strings.Contains(p, "transform"):
-		return "convert"
-	case strings.Contains(p, "filter") || strings.Contains(p, "filtrar"):
-		return "filter"
-	case strings.Contains(p, "extract") || strings.Contains(p, "extraer"):
-		return "extract"
-	case strings.Contains(p, "normalize") || strings.Contains(p, "normalizar"):
-		return "normalize"
-	default:
+		op = "convert"
+		matches++
+	}
+	if strings.Contains(p, "filter") || strings.Contains(p, "filtrar") {
+		op = "filter"
+		matches++
+	}
+	if strings.Contains(p, "extract") || strings.Contains(p, "extraer") {
+		op = "extract"
+		matches++
+	}
+	if strings.Contains(p, "normalize") || strings.Contains(p, "normalizar") {
+		op = "normalize"
+		matches++
+	}
+	if matches != 1 {
 		return ""
 	}
+	return op
 }
 
 // MarshalJSON keeps the plan serializable with a stable shape.

@@ -44,6 +44,14 @@ func TestInferPlan_AmbiguousPrompt(t *testing.T) {
 	}
 }
 
+func TestInferPlan_MultiOperationPrompt(t *testing.T) {
+	summary := Summary{Format: "json"}
+	_, err := InferPlan("convert and filter this json", summary, "csv")
+	if err == nil {
+		t.Fatal("expected error for multi-operation prompt")
+	}
+}
+
 func TestPlanJSONSerializable(t *testing.T) {
 	plan := Plan{
 		Objective: "convert json to csv",

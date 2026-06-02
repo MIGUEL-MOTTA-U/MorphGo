@@ -378,10 +378,10 @@ Cada vez que se avance, actualizar este bloque con información concreta.
 [IA-STEP]
 fecha: 2026-06-02
 etapa: ETAPA_2
-subtarea: serialización Markdown del plan
+subtarea: rechazo de prompts ambiguos
 estado: completado
-resultado: agrega render Markdown del plan y pruebas de serialización
-siguiente: enriquecer la traducción del prompt y el rechazo de ambigüedad
+resultado: detecta prompts con múltiples operaciones y falla explícitamente
+siguiente: enriquecer la traducción del prompt y la estructura vacía
 bloqueos: ninguno
 [/IA-STEP]
 ```
