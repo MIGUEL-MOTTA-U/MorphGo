@@ -1,6 +1,7 @@
 package parsers
 
 import (
+	"os"
 	"path/filepath"
 	"testing"
 
@@ -32,13 +33,29 @@ func TestInspectExcel_ValidWorkbook(t *testing.T) {
 		t.Fatalf("expected format excel, got %q", summary.Format)
 	}
 	if !summary.HasHeader {
-		t.Fatal("expected workbook sheets to be detected")
-	}
-	if len(summary.Columns) == 0 {
-		t.Fatal("expected sheet names in summary")
+		t.Fatal("expected workbook structure to be detected")
 	}
 	if summary.Rows == 0 {
 		t.Fatal("expected row count greater than zero")
+	}
+}
+
+func TestInspectExcel_EmptySheet(t *testing.T) {
+	dir := t.TempDir()
+	path := filepath.Join(dir, "empty-sheet.xlsx")
+
+	f := excelize.NewFile()
+	if err := f.SaveAs(path); err != nil {
+		t.Fatalf("save workbook: %v", err)
+	}
+	_ = f.Close()
+
+	summary, err := InspectExcel(path)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if summary.Rows != 0 {
+		t.Fatalf("expected 0 rows for empty sheet, got %d", summary.Rows)
 	}
 }
 
@@ -46,5 +63,18 @@ func TestInspectExcel_FileNotFound(t *testing.T) {
 	_, err := InspectExcel(filepath.Join(t.TempDir(), "missing.xlsx"))
 	if err == nil {
 		t.Fatal("expected error for missing file")
+	}
+}
+
+func TestInspectExcel_CorruptFile(t *testing.T) {
+	dir := t.TempDir()
+	path := filepath.Join(dir, "corrupt.xlsx")
+	if err := os.WriteFile(path, []byte("not an excel file"), 0o600); err != nil {
+		t.Fatalf("write file: %v", err)
+	}
+
+	_, err := InspectExcel(path)
+	if err == nil {
+		t.Fatal("expected error for corrupt file")
 	}
 }

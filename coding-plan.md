@@ -378,9 +378,9 @@ Cada vez que se avance, actualizar este bloque con información concreta.
 [IA-STEP]
 fecha: 2026-06-01
 etapa: ETAPA_1
-subtarea: detector Excel
+subtarea: cobertura Excel
 estado: completado
-resultado: detecta hojas y cuenta filas en libros Excel válidos
+resultado: simplifica pruebas para workbook válido, vacío, inexistente y corrupto
 siguiente: implementar detector de PDF
 bloqueos: ninguno
 [/IA-STEP]
