@@ -21,6 +21,9 @@ func InspectYAML(path string) (schema.Summary, error) {
 	}
 
 	summary := schema.Summary{Format: "yaml"}
+	if value == nil {
+		return summary, nil
+	}
 	switch v := value.(type) {
 	case map[string]any:
 		summary.HasHeader = true
