@@ -80,3 +80,24 @@ func main(){os.Exit(1)}
 		t.Fatal("expected non-zero exit code")
 	}
 }
+
+func TestRunMain_CleansBinary(t *testing.T) {
+	dir := t.TempDir()
+	if err := os.WriteFile(filepath.Join(dir, "go.mod"), []byte("module tempgen\ngo 1.26.3\n"), 0o600); err != nil {
+		t.Fatalf("write go.mod: %v", err)
+	}
+	mainPath := filepath.Join(dir, "main.go")
+	if err := os.WriteFile(mainPath, []byte("package main\nfunc main(){}\n"), 0o600); err != nil {
+		t.Fatalf("write main.go: %v", err)
+	}
+
+	_, err := RunMain(mainPath, 5*time.Second)
+	if err != nil {
+		t.Fatalf("RunMain returned error: %v", err)
+	}
+
+	binPath := filepath.Join(dir, "morphgo-runner.exe")
+	if _, statErr := os.Stat(binPath); !os.IsNotExist(statErr) {
+		t.Fatalf("expected binary to be cleaned up, stat err: %v", statErr)
+	}
+}

@@ -378,10 +378,10 @@ Cada vez que se avance, actualizar este bloque con información concreta.
 [IA-STEP]
 fecha: 2026-06-02
 etapa: ETAPA_4
-subtarea: captura separada de salida
+subtarea: cleanup y timeout
 estado: completado
-resultado: separa compilaci\u00f3n y ejecuci\u00f3n, capturando stdout y stderr
-siguiente: limpieza de temporales y timeout final
+resultado: elimina binarios temporales y mantiene timeout por ejecuci\u00f3n
+siguiente: cerrar etapa de sandbox
 bloqueos: ninguno
 [/IA-STEP]
 ```
