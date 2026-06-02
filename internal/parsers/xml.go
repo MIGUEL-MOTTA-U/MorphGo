@@ -3,6 +3,7 @@ package parsers
 import (
 	"bytes"
 	"encoding/xml"
+	"errors"
 	"io"
 	"os"
 
@@ -20,15 +21,20 @@ func InspectXML(path string) (schema.Summary, error) {
 	summary := schema.Summary{Format: "xml"}
 	nodes := make(map[string]struct{})
 	attrs := make(map[string]struct{})
+	seenToken := false
 
 	for {
 		tok, err := decoder.Token()
 		if err != nil {
 			if err == io.EOF {
+				if !seenToken {
+					return schema.Summary{}, errors.New("empty xml file")
+				}
 				break
 			}
 			return schema.Summary{}, err
 		}
+		seenToken = true
 		switch t := tok.(type) {
 		case xml.StartElement:
 			nodes[t.Name.Local] = struct{}{}
