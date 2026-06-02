@@ -378,9 +378,9 @@ Cada vez que se avance, actualizar este bloque con información concreta.
 [IA-STEP]
 fecha: 2026-06-02
 etapa: ETAPA_3
-subtarea: archivo temporal main.go por corrida
+subtarea: alcance minimalista del c\u00f3digo generado
 estado: completado
-resultado: escribe el c\u00f3digo generado en un main.go temporal por corrida
+resultado: restringe la plantilla a imports y funciones estrictamente necesarios
 siguiente: cerrar la etapa de generación
 bloqueos: ninguno
 [/IA-STEP]

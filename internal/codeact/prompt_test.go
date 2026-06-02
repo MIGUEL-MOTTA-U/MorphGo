@@ -28,7 +28,10 @@ func TestGenerateMain_KnownPlan(t *testing.T) {
 	if !strings.Contains(code, "package main") {
 		t.Fatal("expected package main")
 	}
-	if !strings.Contains(code, "\"errors\"") || !strings.Contains(code, "\"fmt\"") {
+	if strings.Contains(code, "\"errors\"") {
+		t.Fatal("expected no extra error import")
+	}
+	if !strings.Contains(code, "\"fmt\"") {
 		t.Fatal("expected valid imports")
 	}
 	if !strings.Contains(code, "func run() error") {
@@ -39,6 +42,9 @@ func TestGenerateMain_KnownPlan(t *testing.T) {
 	}
 	if count := strings.Count(code, "func "); count != 2 {
 		t.Fatalf("expected exactly 2 functions, got %d", count)
+	}
+	if strings.Contains(code, "reflect") {
+		t.Fatal("expected no reflection usage")
 	}
 }
 
