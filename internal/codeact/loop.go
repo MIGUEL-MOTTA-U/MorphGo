@@ -28,7 +28,7 @@ func RunPlan(plan schema.Plan, timeout time.Duration) (sandbox.Result, error) {
 }
 
 // RetryRunPlan retries generation and sandbox execution a limited number of times.
-func RetryRunPlan(plan schema.Plan, timeout time.Duration, maxAttempts int) (sandbox.Result, []string, error) {
+func RetryRunPlan(plan schema.Plan, timeout time.Duration, maxAttempts int) (sandbox.Result, []Attempt, error) {
 	return retryRunPlan(plan, timeout, maxAttempts, GenerateMain, WriteTempMain, sandbox.RunMain)
 }
 
@@ -39,47 +39,59 @@ func retryRunPlan(
 	generate func(schema.Plan) (string, error),
 	write func(string) (string, error),
 	run func(string, time.Duration) (sandbox.Result, error),
-) (sandbox.Result, []string, error) {
+) (sandbox.Result, []Attempt, error) {
 	if maxAttempts < 1 {
 		return sandbox.Result{}, nil, errors.New("maxAttempts must be at least 1")
 	}
 
-	var history []string
+	var history []Attempt
 	var lastError string
 	for i := 0; i < maxAttempts; i++ {
+		attempt := Attempt{Number: i + 1}
 		code, err := generate(plan)
 		if err != nil {
-			msg := "generate: " + err.Error()
-			history = append(history, msg)
-			if msg == lastError {
+			attempt.Stage = "generate"
+			attempt.Error = err.Error()
+			history = append(history, attempt)
+			if attempt.Error == lastError {
 				return sandbox.Result{}, history, errors.New("repeated error")
 			}
-			lastError = msg
+			lastError = attempt.Error
 			continue
 		}
 
 		mainPath, err := write(code)
 		if err != nil {
-			msg := "write: " + err.Error()
-			history = append(history, msg)
-			if msg == lastError {
+			attempt.Stage = "write"
+			attempt.Error = err.Error()
+			history = append(history, attempt)
+			if attempt.Error == lastError {
 				return sandbox.Result{}, history, errors.New("repeated error")
 			}
-			lastError = msg
+			lastError = attempt.Error
 			continue
 		}
 
 		res, err := run(mainPath, timeout)
 		if err == nil {
+			attempt.Stage = "run"
+			attempt.Stdout = res.Stdout
+			attempt.Stderr = res.Stderr
+			attempt.ExitCode = res.ExitCode
+			history = append(history, attempt)
 			return res, history, nil
 		}
 
-		msg := classifyRunError(res, err)
-		history = append(history, msg)
-		if msg == lastError {
+		attempt.Stage = classifyRunError(res, err)
+		attempt.Error = err.Error()
+		attempt.Stdout = res.Stdout
+		attempt.Stderr = res.Stderr
+		attempt.ExitCode = res.ExitCode
+		history = append(history, attempt)
+		if attempt.Stage+":"+attempt.Error == lastError {
 			return res, history, errors.New("repeated error")
 		}
-		lastError = msg
+		lastError = attempt.Stage + ":" + attempt.Error
 	}
 
 	return sandbox.Result{}, history, errors.New("max attempts reached")
@@ -88,7 +100,17 @@ func retryRunPlan(
 func classifyRunError(res sandbox.Result, err error) string {
 	msg := err.Error()
 	if strings.Contains(strings.ToLower(res.Stderr), "undefined") || strings.Contains(strings.ToLower(msg), "compile") {
-		return "compile: " + msg
+		return "compile"
 	}
-	return "runtime: " + msg
+	return "runtime"
+}
+
+// Attempt records one retry step for traceability.
+type Attempt struct {
+	Number   int
+	Stage    string
+	Error    string
+	Stdout   string
+	Stderr   string
+	ExitCode int
 }

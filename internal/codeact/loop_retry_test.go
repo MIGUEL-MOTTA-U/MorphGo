@@ -35,8 +35,14 @@ func TestRetryRunPlan_CompileCorrection(t *testing.T) {
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	if len(history) != 1 {
-		t.Fatalf("expected 1 failed attempt, got %#v", history)
+	if len(history) != 2 {
+		t.Fatalf("expected 2 attempts, got %#v", history)
+	}
+	if history[0].Number != 1 || history[0].Stage != "compile" {
+		t.Fatalf("unexpected history entry: %#v", history[0])
+	}
+	if history[1].Number != 2 || history[1].Stage != "run" {
+		t.Fatalf("unexpected success history entry: %#v", history[1])
 	}
 	if res.Stdout != "ok" {
 		t.Fatalf("unexpected result: %#v", res)
@@ -61,6 +67,9 @@ func TestRetryRunPlan_AbandonsAfterNAttempts(t *testing.T) {
 	if len(history) != 2 {
 		t.Fatalf("expected 2 attempts, got %#v", history)
 	}
+	if history[0].Stage != "runtime" || history[1].Stage != "runtime" {
+		t.Fatalf("expected runtime attempts, got %#v", history)
+	}
 }
 
 func TestRetryRunPlan_RepeatedErrorStopsEarly(t *testing.T) {
@@ -83,6 +92,9 @@ func TestRetryRunPlan_RepeatedErrorStopsEarly(t *testing.T) {
 	}
 	if len(history) != 2 {
 		t.Fatalf("expected two repeated attempts, got %#v", history)
+	}
+	if history[0].Stage != "runtime" || history[1].Stage != "runtime" {
+		t.Fatalf("expected repeated runtime attempts, got %#v", history)
 	}
 	if calls != 2 {
 		t.Fatalf("expected early stop after repeated error, got %d calls", calls)

@@ -378,9 +378,9 @@ Cada vez que se avance, actualizar este bloque con información concreta.
 [IA-STEP]
 fecha: 2026-06-02
 etapa: ETAPA_5
-subtarea: reintentos limitados
+subtarea: historial estructurado de intentos
 estado: completado
-resultado: clasifica errores simples y reintenta con l\u00edmite y trazabilidad
+resultado: conserva intentos con etapa, error, salida y c\u00f3digo de salida
 siguiente: detener el loop ante errores repetidos
 bloqueos: ninguno
 [/IA-STEP]
