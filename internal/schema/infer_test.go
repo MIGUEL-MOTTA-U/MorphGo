@@ -96,6 +96,22 @@ func TestInferPlan_EmptySummary(t *testing.T) {
 	}
 }
 
+func TestPlanEmptyStructure(t *testing.T) {
+	var plan Plan
+
+	data, err := json.Marshal(plan)
+	if err != nil {
+		t.Fatalf("json marshal empty plan: %v", err)
+	}
+	if len(data) == 0 {
+		t.Fatal("expected json output for empty plan")
+	}
+
+	if md := plan.MarshalMarkdown(); md == "" {
+		t.Fatal("expected markdown output for empty plan")
+	}
+}
+
 func containsAll(s string, parts []string) bool {
 	for _, part := range parts {
 		if !strings.Contains(s, part) {

@@ -378,10 +378,10 @@ Cada vez que se avance, actualizar este bloque con información concreta.
 [IA-STEP]
 fecha: 2026-06-02
 etapa: ETAPA_2
-subtarea: rechazo de prompts ambiguos
+subtarea: estructura vacía del plan
 estado: completado
-resultado: detecta prompts con múltiples operaciones y falla explícitamente
-siguiente: enriquecer la traducción del prompt y la estructura vacía
+resultado: valida que el plan cero serializa sin romperse
+siguiente: cerrar etapa de planificación
 bloqueos: ninguno
 [/IA-STEP]
 ```
