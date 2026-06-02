@@ -45,7 +45,7 @@ func retryRunPlan(
 	}
 
 	var history []Attempt
-	var lastError string
+	var lastFingerprint string
 	for i := 0; i < maxAttempts; i++ {
 		attempt := Attempt{Number: i + 1}
 		code, err := generate(plan)
@@ -53,10 +53,10 @@ func retryRunPlan(
 			attempt.Stage = "generate"
 			attempt.Error = err.Error()
 			history = append(history, attempt)
-			if attempt.Error == lastError {
+			if attempt.fingerprint() == lastFingerprint {
 				return sandbox.Result{}, history, errors.New("repeated error")
 			}
-			lastError = attempt.Error
+			lastFingerprint = attempt.fingerprint()
 			continue
 		}
 
@@ -65,10 +65,10 @@ func retryRunPlan(
 			attempt.Stage = "write"
 			attempt.Error = err.Error()
 			history = append(history, attempt)
-			if attempt.Error == lastError {
+			if attempt.fingerprint() == lastFingerprint {
 				return sandbox.Result{}, history, errors.New("repeated error")
 			}
-			lastError = attempt.Error
+			lastFingerprint = attempt.fingerprint()
 			continue
 		}
 
@@ -88,10 +88,10 @@ func retryRunPlan(
 		attempt.Stderr = res.Stderr
 		attempt.ExitCode = res.ExitCode
 		history = append(history, attempt)
-		if attempt.Stage+":"+attempt.Error == lastError {
+		if attempt.fingerprint() == lastFingerprint {
 			return res, history, errors.New("repeated error")
 		}
-		lastError = attempt.Stage + ":" + attempt.Error
+		lastFingerprint = attempt.fingerprint()
 	}
 
 	return sandbox.Result{}, history, errors.New("max attempts reached")
@@ -113,4 +113,8 @@ type Attempt struct {
 	Stdout   string
 	Stderr   string
 	ExitCode int
+}
+
+func (a Attempt) fingerprint() string {
+	return a.Stage + ":" + strings.TrimSpace(a.Error) + ":" + strings.TrimSpace(a.Stderr)
 }

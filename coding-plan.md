@@ -378,10 +378,10 @@ Cada vez que se avance, actualizar este bloque con información concreta.
 [IA-STEP]
 fecha: 2026-06-02
 etapa: ETAPA_5
-subtarea: historial estructurado de intentos
+subtarea: detenci\u00f3n por error repetido
 estado: completado
-resultado: conserva intentos con etapa, error, salida y c\u00f3digo de salida
-siguiente: detener el loop ante errores repetidos
+resultado: compara una huella normalizada del error y corta el loop
+siguiente: cerrar la autocorrecci\u00f3n
 bloqueos: ninguno
 [/IA-STEP]
 ```

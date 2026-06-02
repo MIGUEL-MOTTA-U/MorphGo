@@ -84,7 +84,7 @@ func TestRetryRunPlan_RepeatedErrorStopsEarly(t *testing.T) {
 		func(code string) (string, error) { return code, nil },
 		func(mainPath string, timeout time.Duration) (sandbox.Result, error) {
 			calls++
-			return sandbox.Result{Stderr: "runtime panic"}, errors.New("runtime failed")
+			return sandbox.Result{Stderr: "runtime panic  "}, errors.New("runtime failed ")
 		},
 	)
 	if err == nil {
