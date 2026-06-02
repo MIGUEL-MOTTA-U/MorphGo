@@ -378,10 +378,10 @@ Cada vez que se avance, actualizar este bloque con información concreta.
 [IA-STEP]
 fecha: 2026-06-01
 etapa: ETAPA_1
-subtarea: detector TXT/Markdown
+subtarea: detector Excel
 estado: completado
-resultado: detecta encabezados, listas y párrafos en texto/markdown
-siguiente: implementar detector de Excel
+resultado: detecta hojas y cuenta filas en libros Excel válidos
+siguiente: implementar detector de PDF
 bloqueos: ninguno
 [/IA-STEP]
 ```
