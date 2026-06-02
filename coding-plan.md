@@ -376,12 +376,12 @@ Cada vez que se avance, actualizar este bloque con información concreta.
 
 ```text
 [IA-STEP]
-fecha: 2026-06-01
-etapa: ETAPA_1
-subtarea: detector PDF
+fecha: 2026-06-02
+etapa: ETAPA_2
+subtarea: estructura Plan e inferencia mínima
 estado: completado
-resultado: detecta PDF válido básico y rechaza archivos no-PDF
-siguiente: cerrar etapa de inspección
+resultado: agrega plan serializable, operación inferida y pruebas básicas
+siguiente: enriquecer la traducción del prompt y la serialización del plan
 bloqueos: ninguno
 [/IA-STEP]
 ```

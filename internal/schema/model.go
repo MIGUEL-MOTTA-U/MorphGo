@@ -8,3 +8,13 @@ type Summary struct {
 	Columns   []string
 	Rows      int
 }
+
+// Plan describes a minimal transformation to execute.
+type Plan struct {
+	Objective string   `json:"objective"`
+	Source    string   `json:"source"`
+	Target    string   `json:"target"`
+	Operation string   `json:"operation"`
+	Steps     []string `json:"steps"`
+	Summary   Summary  `json:"summary"`
+}
