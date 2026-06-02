@@ -5,6 +5,7 @@ Copyright © 2026 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -25,6 +26,25 @@ to quickly create a Cobra application.`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	// Run: func(cmd *cobra.Command, args []string) { },
+}
+
+var inputPath string
+var taskStr string
+
+func init() {
+	rootCmd.PersistentFlags().StringVar(&inputPath, "input", "", "input file path")
+	rootCmd.PersistentFlags().StringVar(&taskStr, "task", "", "task description")
+	runE := func(cmd *cobra.Command, args []string) error {
+		if inputPath == "" {
+			return fmt.Errorf("missing required flag: --input")
+		}
+		if taskStr == "" {
+			return fmt.Errorf("missing required flag: --task")
+		}
+		return nil
+	}
+	rootCmd.PersistentPreRunE = runE
+	rootCmd.RunE = runE
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.

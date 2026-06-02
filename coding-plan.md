@@ -19,6 +19,7 @@ Construir un **prototipo/sandbox** de un agente CLI en Go que:
 - **Progreso por etapas**: no avanzar si la etapa actual no pasa sus pruebas.
 - **Pruebas unitarias estándar**: suficientes para asegurar robustez básica y manejo de errores, sin sobreingeniería.
 - **Tareas paralelizables**: cuando dos partes sean independientes, se pueden resolver en paralelo.
+ - **Prohibición de palabras**: las palabras prohibidas se listan en el archivo `.words` (no incluido en el repositorio).
 
 ---
 
@@ -377,10 +378,10 @@ Cada vez que se avance, actualizar este bloque con información concreta.
 [IA-STEP]
 fecha: 2026-06-01
 etapa: ETAPA_1
-subtarea: tests del comando inspect
+subtarea: detector CSV
 estado: completado
-resultado: pasa validación de archivo inexistente y JSON inválido
-siguiente: implementar detector de CSV
+resultado: detecta encabezado, columnas y cantidad de filas en CSV válido
+siguiente: implementar detector de JSON
 bloqueos: ninguno
 [/IA-STEP]
 ```
@@ -405,4 +406,3 @@ bloqueos: ninguno
 - [ ] Persistencia de corridas.
 - [ ] Tests mínimos por etapa.
 - [ ] Registro de progreso para retomar trabajo.
-
