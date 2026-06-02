@@ -378,9 +378,9 @@ Cada vez que se avance, actualizar este bloque con información concreta.
 [IA-STEP]
 fecha: 2026-06-02
 etapa: ETAPA_4
-subtarea: cleanup y timeout
+subtarea: integraci\u00f3n con el loop
 estado: completado
-resultado: elimina binarios temporales y mantiene timeout por ejecuci\u00f3n
+resultado: prepara y ejecuta el main.go temporal desde codeact
 siguiente: cerrar etapa de sandbox
 bloqueos: ninguno
 [/IA-STEP]

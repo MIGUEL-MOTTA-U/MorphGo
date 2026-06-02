@@ -49,5 +49,8 @@ func WriteTempMain(code string) (string, error) {
 	if err := os.WriteFile(path, []byte(code), 0o600); err != nil {
 		return "", err
 	}
+	if err := os.WriteFile(filepath.Join(dir, "go.mod"), []byte("module morphgo-temp\ngo 1.26.3\n"), 0o600); err != nil {
+		return "", err
+	}
 	return path, nil
 }
