@@ -378,10 +378,10 @@ Cada vez que se avance, actualizar este bloque con información concreta.
 [IA-STEP]
 fecha: 2026-06-01
 etapa: ETAPA_1
-subtarea: cobertura CSV
+subtarea: detector JSON
 estado: completado
-resultado: agrega regresiones para archivo vacío, header solo, archivo inexistente y un solo campo
-siguiente: implementar detector de JSON
+resultado: detecta objetos y rechaza JSON inválido con resumen mínimo
+siguiente: implementar detector de XML
 bloqueos: ninguno
 [/IA-STEP]
 ```
