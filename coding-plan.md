@@ -378,10 +378,10 @@ Cada vez que se avance, actualizar este bloque con información concreta.
 [IA-STEP]
 fecha: 2026-06-02
 etapa: ETAPA_3
-subtarea: plantilla base de Go
+subtarea: imports y manejo de errores
 estado: completado
-resultado: genera un main.go mínimo y legible desde un plan
-siguiente: incorporar generación de imports y manejo de errores
+resultado: genera un main.go con imports válidos y error handling básico
+siguiente: cerrar la etapa de generación con cobertura de no duplicados
 bloqueos: ninguno
 [/IA-STEP]
 ```

@@ -25,8 +25,14 @@ func TestGenerateMain_KnownPlan(t *testing.T) {
 	if !strings.Contains(code, "package main") {
 		t.Fatal("expected package main")
 	}
-	if !strings.Contains(code, "fmt.Println") {
-		t.Fatal("expected fmt.Println call")
+	if !strings.Contains(code, "\"errors\"") || !strings.Contains(code, "\"fmt\"") {
+		t.Fatal("expected valid imports")
+	}
+	if !strings.Contains(code, "func run() error") {
+		t.Fatal("expected run helper")
+	}
+	if !strings.Contains(code, "if err := run(); err != nil") {
+		t.Fatal("expected basic error handling")
 	}
 }
 
