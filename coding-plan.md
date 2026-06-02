@@ -378,10 +378,10 @@ Cada vez que se avance, actualizar este bloque con información concreta.
 [IA-STEP]
 fecha: 2026-06-01
 etapa: ETAPA_1
-subtarea: detector XML
+subtarea: detector YAML
 estado: completado
-resultado: detecta nodos y atributos principales, y rechaza XML inválido
-siguiente: implementar detector de YAML
+resultado: detecta mapas y listas YAML e invalida entradas corruptas
+siguiente: implementar detector de TXT/Markdown
 bloqueos: ninguno
 [/IA-STEP]
 ```
