@@ -378,10 +378,10 @@ Cada vez que se avance, actualizar este bloque con información concreta.
 [IA-STEP]
 fecha: 2026-06-02
 etapa: ETAPA_3
-subtarea: alcance minimalista del c\u00f3digo generado
+subtarea: preparar main.go temporal
 estado: completado
-resultado: restringe la plantilla a imports y funciones estrictamente necesarios
-siguiente: cerrar la etapa de generación
+resultado: unifica generaci\u00f3n y escritura del main.go temporal por corrida
+siguiente: cerrar la etapa de generaci\u00f3n
 bloqueos: ninguno
 [/IA-STEP]
 ```
