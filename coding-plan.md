@@ -378,10 +378,10 @@ Cada vez que se avance, actualizar este bloque con información concreta.
 [IA-STEP]
 fecha: 2026-06-01
 etapa: ETAPA_1
-subtarea: detector YAML
+subtarea: detector TXT/Markdown
 estado: completado
-resultado: detecta mapas y listas YAML e invalida entradas corruptas
-siguiente: implementar detector de TXT/Markdown
+resultado: detecta encabezados, listas y párrafos en texto/markdown
+siguiente: implementar detector de Excel
 bloqueos: ninguno
 [/IA-STEP]
 ```
