@@ -3,6 +3,8 @@ package codeact
 import (
 	"errors"
 	"fmt"
+	"os"
+	"path/filepath"
 	"strings"
 
 	"morphgo/internal/schema"
@@ -30,4 +32,22 @@ func GenerateMain(plan schema.Plan) (string, error) {
 	b.WriteString("\t}\n")
 	b.WriteString("}\n")
 	return b.String(), nil
+}
+
+// WriteTempMain stores generated code in a temporary main.go file for the current run.
+func WriteTempMain(code string) (string, error) {
+	if strings.TrimSpace(code) == "" {
+		return "", errors.New("generated code is required")
+	}
+
+	dir, err := os.MkdirTemp("", "morphgo-*")
+	if err != nil {
+		return "", err
+	}
+
+	path := filepath.Join(dir, "main.go")
+	if err := os.WriteFile(path, []byte(code), 0o600); err != nil {
+		return "", err
+	}
+	return path, nil
 }

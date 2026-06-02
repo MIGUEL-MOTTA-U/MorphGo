@@ -378,9 +378,9 @@ Cada vez que se avance, actualizar este bloque con información concreta.
 [IA-STEP]
 fecha: 2026-06-02
 etapa: ETAPA_3
-subtarea: compilaci\u00f3n en caso feliz
+subtarea: archivo temporal main.go por corrida
 estado: completado
-resultado: genera un main.go temporal que compila en un módulo limpio
+resultado: escribe el c\u00f3digo generado en un main.go temporal por corrida
 siguiente: cerrar la etapa de generación
 bloqueos: ninguno
 [/IA-STEP]
