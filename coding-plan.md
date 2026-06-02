@@ -377,11 +377,11 @@ Cada vez que se avance, actualizar este bloque con información concreta.
 ```text
 [IA-STEP]
 fecha: 2026-06-02
-etapa: ETAPA_3
-subtarea: preparar main.go temporal
+etapa: ETAPA_4
+subtarea: runner de sandbox
 estado: completado
-resultado: unifica generaci\u00f3n y escritura del main.go temporal por corrida
-siguiente: cerrar la etapa de generaci\u00f3n
+resultado: ejecuta main.go temporal con timeout y captura salida
+siguiente: capturar stdout, stderr y errores de compilaci\u00f3n por separado
 bloqueos: ninguno
 [/IA-STEP]
 ```
