@@ -1,6 +1,5 @@
 /*
 Copyright © 2026 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
@@ -10,8 +9,6 @@ import (
 
 	"github.com/spf13/cobra"
 )
-
-
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -30,10 +27,14 @@ to quickly create a Cobra application.`,
 
 var inputPath string
 var taskStr string
+var outputPath string
+var targetFormat string
 
 func init() {
 	rootCmd.PersistentFlags().StringVar(&inputPath, "input", "", "input file path")
 	rootCmd.PersistentFlags().StringVar(&taskStr, "task", "", "task description")
+	rootCmd.PersistentFlags().StringVar(&outputPath, "output", "", "output path")
+	rootCmd.PersistentFlags().StringVar(&targetFormat, "target", "", "target format")
 	runE := func(cmd *cobra.Command, args []string) error {
 		if inputPath == "" {
 			return fmt.Errorf("missing required flag: --input")
@@ -67,5 +68,3 @@ func init() {
 	// when this action is called directly.
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
-
-

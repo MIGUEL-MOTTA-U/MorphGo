@@ -378,9 +378,9 @@ Cada vez que se avance, actualizar este bloque con información concreta.
 [IA-STEP]
 fecha: 2026-06-01
 etapa: ETAPA_1
-subtarea: detector CSV
+subtarea: cobertura CSV
 estado: completado
-resultado: detecta encabezado, columnas y cantidad de filas en CSV válido
+resultado: agrega regresiones para archivo vacío, header solo, archivo inexistente y un solo campo
 siguiente: implementar detector de JSON
 bloqueos: ninguno
 [/IA-STEP]
