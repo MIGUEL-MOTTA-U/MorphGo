@@ -378,10 +378,10 @@ Cada vez que se avance, actualizar este bloque con información concreta.
 [IA-STEP]
 fecha: 2026-06-02
 etapa: ETAPA_4
-subtarea: integraci\u00f3n con el loop
+subtarea: cierre de sandbox
 estado: completado
-resultado: prepara y ejecuta el main.go temporal desde codeact
-siguiente: cerrar etapa de sandbox
+resultado: sandbox integrado con generaci\u00f3n, timeout, cleanup y captura de salida
+siguiente: iniciar feedback loop y autocorrecci\u00f3n
 bloqueos: ninguno
 [/IA-STEP]
 ```
