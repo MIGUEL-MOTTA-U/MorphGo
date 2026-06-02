@@ -378,10 +378,10 @@ Cada vez que se avance, actualizar este bloque con información concreta.
 [IA-STEP]
 fecha: 2026-06-01
 etapa: ETAPA_1
-subtarea: detector JSON
+subtarea: detector XML
 estado: completado
-resultado: detecta objetos y rechaza JSON inválido con resumen mínimo
-siguiente: implementar detector de XML
+resultado: detecta nodos y atributos principales, y rechaza XML inválido
+siguiente: implementar detector de YAML
 bloqueos: ninguno
 [/IA-STEP]
 ```
