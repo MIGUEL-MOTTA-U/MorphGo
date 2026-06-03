@@ -11,10 +11,12 @@ import (
 
 func TestPrepareTempMain_WritesGeneratedCode(t *testing.T) {
 	plan := schema.Plan{
-		Objective: "convert json to csv",
-		Source:    "json",
-		Target:    "csv",
-		Operation: "convert",
+		Objective:  "convert json to csv",
+		Source:     "json",
+		Target:     "csv",
+		Operation:  "convert",
+		InputPath:  "input.json",
+		OutputPath: "output.csv",
 	}
 
 	path, err := PrepareTempMain(plan, nil)

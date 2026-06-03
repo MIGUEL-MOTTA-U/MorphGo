@@ -411,10 +411,10 @@ Cada vez que se avance, actualizar este bloque con informaciÃ³n concreta.
 [IA-STEP]
 fecha: 2026-06-03
 etapa: ETAPA_3
-subtarea: depurar cobertura del generador temporal
+subtarea: endurecer generador temporal JSON?CSV
 estado: completado
-resultado: se mantuvo una sola prueba para `WriteTempMain` y quedó validado `go test ./internal/codeact`
-siguiente: elegir si conviene reforzar el generador o el runner de sandbox
+resultado: `GenerateMain` ahora exige `InputPath` y `OutputPath` para la ruta JSON?CSV, y `go test ./internal/codeact` quedó en verde
+siguiente: seguir reforzando el generador o avanzar al runner de sandbox si conviene
 bloqueos: ninguno
 [/IA-STEP]
 ```
@@ -439,6 +439,7 @@ bloqueos: ninguno
 - [ ] Persistencia de corridas.
 - [ ] Tests mÃ­nimos por etapa.
 - [ ] Registro de progreso para retomar trabajo.
+
 
 
 

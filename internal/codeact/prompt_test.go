@@ -12,11 +12,13 @@ import (
 
 func TestGenerateMain_KnownPlan(t *testing.T) {
 	plan := schema.Plan{
-		Objective: "convert json to csv",
-		Source:    "json",
-		Target:    "csv",
-		Operation: "convert",
-		Summary:   schema.Summary{Columns: []string{"id", "name"}},
+		Objective:  "convert json to csv",
+		Source:     "json",
+		Target:     "csv",
+		Operation:  "convert",
+		InputPath:  "input.json",
+		OutputPath: "output.csv",
+		Summary:    schema.Summary{Columns: []string{"id", "name"}},
 	}
 
 	code, err := GenerateMain(plan, nil)
@@ -47,13 +49,29 @@ func TestGenerateMain_MissingData(t *testing.T) {
 	}
 }
 
-func TestGenerateMain_CompilesInHappyPath(t *testing.T) {
+func TestGenerateMain_JsonToCsvRequiresPaths(t *testing.T) {
 	plan := schema.Plan{
 		Objective: "convert json to csv",
 		Source:    "json",
 		Target:    "csv",
 		Operation: "convert",
-		Summary:   schema.Summary{Columns: []string{"id", "name"}},
+	}
+
+	_, err := GenerateMain(plan, nil)
+	if err == nil {
+		t.Fatal("expected error when json to csv paths are missing")
+	}
+}
+
+func TestGenerateMain_CompilesInHappyPath(t *testing.T) {
+	plan := schema.Plan{
+		Objective:  "convert json to csv",
+		Source:     "json",
+		Target:     "csv",
+		Operation:  "convert",
+		InputPath:  "input.json",
+		OutputPath: "output.csv",
+		Summary:    schema.Summary{Columns: []string{"id", "name"}},
 	}
 
 	code, err := GenerateMain(plan, nil)
