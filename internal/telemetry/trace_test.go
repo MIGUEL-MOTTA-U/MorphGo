@@ -98,3 +98,26 @@ func TestSaveRun_InvalidBaseDir(t *testing.T) {
 		t.Fatal("expected error when base dir is not a directory")
 	}
 }
+
+func TestSaveRun_PreservesStatus(t *testing.T) {
+	baseDir := t.TempDir()
+	log := RunLog{Status: "success"}
+
+	runDir, err := SaveRun(baseDir, log)
+	if err != nil {
+		t.Fatalf("SaveRun failed: %v", err)
+	}
+
+	data, err := os.ReadFile(filepath.Join(runDir, "run.json"))
+	if err != nil {
+		t.Fatalf("failed to read run.json: %v", err)
+	}
+
+	var savedLog RunLog
+	if err := json.Unmarshal(data, &savedLog); err != nil {
+		t.Fatalf("failed to unmarshal run.json: %v", err)
+	}
+	if savedLog.Status != "success" {
+		t.Fatalf("expected status success, got %q", savedLog.Status)
+	}
+}
