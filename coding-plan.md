@@ -410,11 +410,11 @@ Cada vez que se avance, actualizar este bloque con informaciÃ³n concreta.
 ```text
 [IA-STEP]
 fecha: 2026-06-03
-etapa: ETAPA_1
-subtarea: cubrir error de inspección
+etapa: ETAPA_5
+subtarea: cubrir invalidación del retry loop
 estado: completado
-resultado: se agregó prueba para extensiones no soportadas en `Inspect`; `go test ./internal/agent` quedó en verde
-siguiente: seguir reforzando parsers o avanzar a otra pieza pequeña del flujo
+resultado: se agregó prueba para `RetryRunPlan` con `maxAttempts` inválido; `go test ./internal/codeact` quedó en verde
+siguiente: seguir reforzando el loop o avanzar a otra pieza pequeña si conviene
 bloqueos: ninguno
 [/IA-STEP]
 ```
@@ -439,6 +439,7 @@ bloqueos: ninguno
 - [ ] Persistencia de corridas.
 - [ ] Tests mÃ­nimos por etapa.
 - [ ] Registro de progreso para retomar trabajo.
+
 
 
 
