@@ -411,10 +411,10 @@ Cada vez que se avance, actualizar este bloque con informaciÃ³n concreta.
 [IA-STEP]
 fecha: 2026-06-03
 etapa: ETAPA_5
-subtarea: cubrir invalidación del retry loop
+subtarea: cubrir error repetido del retry loop
 estado: completado
-resultado: se agregó prueba para `RetryRunPlan` con `maxAttempts` inválido; `go test ./internal/codeact` quedó en verde
-siguiente: seguir reforzando el loop o avanzar a otra pieza pequeña si conviene
+resultado: `retryRunPlan` ahora tiene prueba explícita para generación repetida con `ErrRepeatedError`; `go test ./internal/codeact` quedó en verde
+siguiente: seguir reforzando feedback loop o cerrar otra pieza pequeña del flujo
 bloqueos: ninguno
 [/IA-STEP]
 ```
@@ -439,6 +439,7 @@ bloqueos: ninguno
 - [ ] Persistencia de corridas.
 - [ ] Tests mÃ­nimos por etapa.
 - [ ] Registro de progreso para retomar trabajo.
+
 
 
 
