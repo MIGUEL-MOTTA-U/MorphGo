@@ -376,12 +376,12 @@ Cada vez que se avance, actualizar este bloque con información concreta.
 
 ```text
 [IA-STEP]
-fecha: 2026-06-02
+fecha: 2026-06-03
 etapa: ETAPA_5
-subtarea: errores sentinela del loop
+subtarea: pasar historial al generador
 estado: completado
-resultado: distingue claramente error repetido y l\u00edmite de intentos
-siguiente: cerrar la autocorrecci\u00f3n
+resultado: el generador de código ahora recibe el historial de intentos para permitir autocorrección real
+siguiente: implementar persistencia de contexto (Etapa 6)
 bloqueos: ninguno
 [/IA-STEP]
 ```

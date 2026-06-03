@@ -11,7 +11,7 @@ import (
 )
 
 // GenerateMain renders a minimal temporary Go program for a given plan.
-func GenerateMain(plan schema.Plan) (string, error) {
+func GenerateMain(plan schema.Plan, history []Attempt) (string, error) {
 	if plan.Objective == "" {
 		return "", errors.New("plan objective is required")
 	}

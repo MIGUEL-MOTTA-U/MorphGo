@@ -17,7 +17,7 @@ func TestRetryRunPlan_CompileCorrection(t *testing.T) {
 		plan,
 		time.Second,
 		3,
-		func(schema.Plan) (string, error) {
+		func(schema.Plan, []Attempt) (string, error) {
 			attempts++
 			if attempts == 1 {
 				return "bad code", nil
@@ -56,7 +56,7 @@ func TestRetryRunPlan_AbandonsAfterNAttempts(t *testing.T) {
 		plan,
 		time.Second,
 		2,
-		func(schema.Plan) (string, error) { return "code", nil },
+		func(schema.Plan, []Attempt) (string, error) { return "code", nil },
 		func(code string) (string, error) { return code, nil },
 		func(mainPath string, timeout time.Duration) (sandbox.Result, error) {
 			runs++
@@ -88,7 +88,7 @@ func TestRetryRunPlan_RepeatedErrorStopsEarly(t *testing.T) {
 		plan,
 		time.Second,
 		5,
-		func(schema.Plan) (string, error) { return "code", nil },
+		func(schema.Plan, []Attempt) (string, error) { return "code", nil },
 		func(code string) (string, error) { return code, nil },
 		func(mainPath string, timeout time.Duration) (sandbox.Result, error) {
 			calls++

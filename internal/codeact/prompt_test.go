@@ -18,7 +18,7 @@ func TestGenerateMain_KnownPlan(t *testing.T) {
 		Operation: "convert",
 	}
 
-	code, err := GenerateMain(plan)
+	code, err := GenerateMain(plan, nil)
 	if err != nil {
 		t.Fatalf("GenerateMain returned error: %v", err)
 	}
@@ -49,7 +49,7 @@ func TestGenerateMain_KnownPlan(t *testing.T) {
 }
 
 func TestGenerateMain_MissingData(t *testing.T) {
-	_, err := GenerateMain(schema.Plan{})
+	_, err := GenerateMain(schema.Plan{}, nil)
 	if err == nil {
 		t.Fatal("expected error for incomplete plan")
 	}
@@ -63,7 +63,7 @@ func TestGenerateMain_NotEmpty(t *testing.T) {
 		Operation: "convert",
 	}
 
-	code, err := GenerateMain(plan)
+	code, err := GenerateMain(plan, nil)
 	if err != nil {
 		t.Fatalf("GenerateMain returned error: %v", err)
 	}
@@ -80,7 +80,7 @@ func TestGenerateMain_CompilesInHappyPath(t *testing.T) {
 		Operation: "convert",
 	}
 
-	code, err := GenerateMain(plan)
+	code, err := GenerateMain(plan, nil)
 	if err != nil {
 		t.Fatalf("GenerateMain returned error: %v", err)
 	}

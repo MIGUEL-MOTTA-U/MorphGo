@@ -15,8 +15,8 @@ var (
 )
 
 // PrepareTempMain generates and writes the temporary main.go for a run.
-func PrepareTempMain(plan schema.Plan) (string, error) {
-	code, err := GenerateMain(plan)
+func PrepareTempMain(plan schema.Plan, history []Attempt) (string, error) {
+	code, err := GenerateMain(plan, history)
 	if err != nil {
 		return "", err
 	}
@@ -25,7 +25,7 @@ func PrepareTempMain(plan schema.Plan) (string, error) {
 
 // RunPlan prepares and executes the generated program through the sandbox.
 func RunPlan(plan schema.Plan, timeout time.Duration) (sandbox.Result, error) {
-	mainPath, err := PrepareTempMain(plan)
+	mainPath, err := PrepareTempMain(plan, nil)
 	if err != nil {
 		return sandbox.Result{}, err
 	}
@@ -41,7 +41,7 @@ func retryRunPlan(
 	plan schema.Plan,
 	timeout time.Duration,
 	maxAttempts int,
-	generate func(schema.Plan) (string, error),
+	generate func(schema.Plan, []Attempt) (string, error),
 	write func(string) (string, error),
 	run func(string, time.Duration) (sandbox.Result, error),
 ) (sandbox.Result, []Attempt, error) {
@@ -53,7 +53,7 @@ func retryRunPlan(
 	var lastFingerprint string
 	for i := 0; i < maxAttempts; i++ {
 		attempt := Attempt{Number: i + 1}
-		code, err := generate(plan)
+		code, err := generate(plan, history)
 		if err != nil {
 			attempt.Stage = "generate"
 			attempt.Error = err.Error()

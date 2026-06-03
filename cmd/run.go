@@ -7,8 +7,10 @@ import (
 var runCmd = &cobra.Command{
 	Use:   "run",
 	Short: "Execute the agent run pipeline",
+	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+		return rootCmd.PersistentPreRunE(cmd, args)
+	},
 	RunE: func(cmd *cobra.Command, args []string) error {
-		// Validation is handled by rootCmd.PersistentPreRunE
 		return nil
 	},
 }

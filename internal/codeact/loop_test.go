@@ -17,7 +17,7 @@ func TestPrepareTempMain_WritesGeneratedCode(t *testing.T) {
 		Operation: "convert",
 	}
 
-	path, err := PrepareTempMain(plan)
+	path, err := PrepareTempMain(plan, nil)
 	if err != nil {
 		t.Fatalf("PrepareTempMain returned error: %v", err)
 	}
@@ -35,7 +35,7 @@ func TestPrepareTempMain_WritesGeneratedCode(t *testing.T) {
 }
 
 func TestPrepareTempMain_MissingData(t *testing.T) {
-	_, err := PrepareTempMain(schema.Plan{})
+	_, err := PrepareTempMain(schema.Plan{}, nil)
 	if err == nil {
 		t.Fatal("expected error for incomplete plan")
 	}
