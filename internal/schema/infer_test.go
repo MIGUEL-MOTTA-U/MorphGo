@@ -9,7 +9,7 @@ import (
 func TestInferPlan_FromJSONSummary(t *testing.T) {
 	summary := Summary{Format: "json", HasHeader: true, Columns: []string{"name", "age"}}
 
-	plan, err := InferPlan("convert this json to csv", summary, "csv")
+	plan, err := InferPlan("convert this json to csv", summary, "csv", "in.json", "out.csv")
 	if err != nil {
 		t.Fatalf("InferPlan returned error: %v", err)
 	}
@@ -19,15 +19,30 @@ func TestInferPlan_FromJSONSummary(t *testing.T) {
 	if plan.Source != "json" || plan.Target != "csv" {
 		t.Fatalf("unexpected endpoints: %#v", plan)
 	}
+	if plan.InputPath != "in.json" || plan.OutputPath != "out.csv" {
+		t.Fatalf("unexpected paths: %#v", plan)
+	}
 	if len(plan.Steps) == 0 {
 		t.Fatal("expected steps to be generated")
+	}
+}
+
+func TestInferPlan_FromSpanishConvertPrompt(t *testing.T) {
+	summary := Summary{Format: "json", HasHeader: true, Columns: []string{"name", "age"}}
+
+	plan, err := InferPlan("convierte este json a csv", summary, "csv", "in.json", "out.csv")
+	if err != nil {
+		t.Fatalf("InferPlan returned error: %v", err)
+	}
+	if plan.Operation != "convert" {
+		t.Fatalf("expected convert operation, got %q", plan.Operation)
 	}
 }
 
 func TestInferPlan_FromCSVSummary(t *testing.T) {
 	summary := Summary{Format: "csv", HasHeader: true, Columns: []string{"name", "age"}}
 
-	plan, err := InferPlan("normalize this csv", summary, "json")
+	plan, err := InferPlan("normalize this csv", summary, "json", "", "")
 	if err != nil {
 		t.Fatalf("InferPlan returned error: %v", err)
 	}
@@ -38,7 +53,7 @@ func TestInferPlan_FromCSVSummary(t *testing.T) {
 
 func TestInferPlan_AmbiguousPrompt(t *testing.T) {
 	summary := Summary{Format: "json"}
-	_, err := InferPlan("do something useful", summary, "csv")
+	_, err := InferPlan("do something useful", summary, "csv", "", "")
 	if err == nil {
 		t.Fatal("expected error for ambiguous prompt")
 	}
@@ -46,7 +61,7 @@ func TestInferPlan_AmbiguousPrompt(t *testing.T) {
 
 func TestInferPlan_MultiOperationPrompt(t *testing.T) {
 	summary := Summary{Format: "json"}
-	_, err := InferPlan("convert and filter this json", summary, "csv")
+	_, err := InferPlan("convert and filter this json", summary, "csv", "", "")
 	if err == nil {
 		t.Fatal("expected error for multi-operation prompt")
 	}
@@ -90,7 +105,7 @@ func TestPlanMarkdownSerializable(t *testing.T) {
 }
 
 func TestInferPlan_EmptySummary(t *testing.T) {
-	_, err := InferPlan("convert json to csv", Summary{}, "csv")
+	_, err := InferPlan("convert json to csv", Summary{}, "csv", "", "")
 	if err == nil {
 		t.Fatal("expected error for empty summary")
 	}

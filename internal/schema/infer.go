@@ -8,7 +8,7 @@ import (
 )
 
 // InferPlan translates a user prompt and a file summary into a small execution plan.
-func InferPlan(prompt string, summary Summary, target string) (Plan, error) {
+func InferPlan(prompt string, summary Summary, target, inputPath, outputPath string) (Plan, error) {
 	prompt = strings.TrimSpace(prompt)
 	if prompt == "" {
 		return Plan{}, errors.New("prompt is required")
@@ -30,12 +30,14 @@ func InferPlan(prompt string, summary Summary, target string) (Plan, error) {
 		op + " into " + target,
 	}
 	return Plan{
-		Objective: prompt,
-		Source:    summary.Format,
-		Target:    target,
-		Operation: op,
-		Steps:     steps,
-		Summary:   summary,
+		Objective:  prompt,
+		Source:     summary.Format,
+		Target:     target,
+		InputPath:  inputPath,
+		OutputPath: outputPath,
+		Operation:  op,
+		Steps:      steps,
+		Summary:    summary,
 	}, nil
 }
 
@@ -44,7 +46,7 @@ func detectOperation(prompt string) string {
 	matches := 0
 	op := ""
 	switch {
-	case strings.Contains(p, "convert") || strings.Contains(p, "convertir") || strings.Contains(p, "transform"):
+	case strings.Contains(p, "convert") || strings.Contains(p, "convertir") || strings.Contains(p, "convierte") || strings.Contains(p, "transform") || strings.Contains(p, "transforma"):
 		op = "convert"
 		matches++
 	}

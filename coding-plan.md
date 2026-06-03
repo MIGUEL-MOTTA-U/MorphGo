@@ -410,11 +410,11 @@ Cada vez que se avance, actualizar este bloque con informaciÃ³n concreta.
 ```text
 [IA-STEP]
 fecha: 2026-06-03
-etapa: ETAPA_6
-subtarea: robustecer persistencia de corridas
+etapa: ETAPA_2
+subtarea: ampliar detección de intención
 estado: completado
-resultado: se agregó cobertura para el caso en que `SaveRun` recibe una ruta base inválida y falla limpiamente; `go test ./internal/telemetry` quedó en verde
-siguiente: revisar otra pieza pequeña de trazabilidad o persistencia si hace falta
+resultado: el planificador ahora reconoce variantes españolas adicionales de conversión como "convierte" y "transforma"; `go test ./internal/schema` quedó en verde
+siguiente: decidir si la próxima mejora pequeña debe ir en planificador, parser o trazabilidad
 bloqueos: ninguno
 [/IA-STEP]
 ```
@@ -439,5 +439,6 @@ bloqueos: ninguno
 - [ ] Persistencia de corridas.
 - [ ] Tests mÃ­nimos por etapa.
 - [ ] Registro de progreso para retomar trabajo.
+
 
 
