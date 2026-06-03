@@ -410,11 +410,11 @@ Cada vez que se avance, actualizar este bloque con informaciÃ³n concreta.
 ```text
 [IA-STEP]
 fecha: 2026-06-03
-etapa: ETAPA_6
-subtarea: preservar estado final en telemetry
+etapa: ETAPA_4
+subtarea: validar camino feliz del orquestador
 estado: completado
-resultado: `SaveRun` ahora se valida también con `Status: success` persistido; `go test ./internal/telemetry` quedó en verde
-siguiente: seguir reforzando trazabilidad o volver al flujo de agente si conviene
+resultado: `Run` ahora tiene prueba E2E pequeña con JSON válido y termina en `success`; `go test ./internal/agent` quedó en verde
+siguiente: seguir reforzando `agent` o volver a otro borde pequeño del flujo
 bloqueos: ninguno
 [/IA-STEP]
 ```
@@ -439,6 +439,7 @@ bloqueos: ninguno
 - [ ] Persistencia de corridas.
 - [ ] Tests mÃ­nimos por etapa.
 - [ ] Registro de progreso para retomar trabajo.
+
 
 
 
