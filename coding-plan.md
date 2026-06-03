@@ -410,11 +410,11 @@ Cada vez que se avance, actualizar este bloque con informaciÃ³n concreta.
 ```text
 [IA-STEP]
 fecha: 2026-06-03
-etapa: ETAPA_1
-subtarea: corregir conteo de filas en Excel
+etapa: ETAPA_4
+subtarea: cubrir estado de error en orquestador
 estado: completado
-resultado: `InspectExcel` ahora cuenta solo filas de datos y la prueba de múltiples hojas quedó alineada; `go test ./internal/parsers` quedó en verde
-siguiente: seguir reforzando parsers o avanzar a otra pieza pequeña del flujo
+resultado: `Run` ahora queda con estado `error` cuando la inspección falla por extensión no soportada; `go test ./internal/agent` quedó en verde
+siguiente: seguir reforzando `agent` o avanzar a otro borde pequeño del flujo
 bloqueos: ninguno
 [/IA-STEP]
 ```
@@ -439,6 +439,7 @@ bloqueos: ninguno
 - [ ] Persistencia de corridas.
 - [ ] Tests mÃ­nimos por etapa.
 - [ ] Registro de progreso para retomar trabajo.
+
 
 
 
