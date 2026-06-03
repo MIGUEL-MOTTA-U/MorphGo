@@ -410,11 +410,11 @@ Cada vez que se avance, actualizar este bloque con informaciÃ³n concreta.
 ```text
 [IA-STEP]
 fecha: 2026-06-03
-etapa: ETAPA_1
-subtarea: cubrir workbook con múltiples hojas
+etapa: ETAPA_2
+subtarea: rechazar prompts en blanco
 estado: completado
-resultado: se agregó prueba para workbook Excel con dos hojas y `go test ./internal/parsers` quedó en verde
-siguiente: seguir reforzando parsers o avanzar a otra pieza pequeña del flujo
+resultado: `InferPlan` ahora cubre prompts vacíos y en blanco; `go test ./internal/schema` quedó en verde
+siguiente: seguir reforzando planificador o avanzar a otra pieza pequeña del flujo
 bloqueos: ninguno
 [/IA-STEP]
 ```
@@ -439,6 +439,7 @@ bloqueos: ninguno
 - [ ] Persistencia de corridas.
 - [ ] Tests mÃ­nimos por etapa.
 - [ ] Registro de progreso para retomar trabajo.
+
 
 
 

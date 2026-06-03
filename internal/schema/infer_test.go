@@ -111,6 +111,14 @@ func TestInferPlan_EmptySummary(t *testing.T) {
 	}
 }
 
+func TestInferPlan_BlankPrompt(t *testing.T) {
+	summary := Summary{Format: "json"}
+	_, err := InferPlan("   ", summary, "csv", "", "")
+	if err == nil {
+		t.Fatal("expected error for blank prompt")
+	}
+}
+
 func TestPlanEmptyStructure(t *testing.T) {
 	var plan Plan
 
