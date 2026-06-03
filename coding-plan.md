@@ -410,11 +410,11 @@ Cada vez que se avance, actualizar este bloque con informaciÃ³n concreta.
 ```text
 [IA-STEP]
 fecha: 2026-06-03
-etapa: ETAPA_3
-subtarea: endurecer generador temporal JSON?CSV
+etapa: ETAPA_1
+subtarea: cubrir error de inspección
 estado: completado
-resultado: `GenerateMain` ahora exige `InputPath` y `OutputPath` para la ruta JSON?CSV, y `go test ./internal/codeact` quedó en verde
-siguiente: seguir reforzando el generador o avanzar al runner de sandbox si conviene
+resultado: se agregó prueba para extensiones no soportadas en `Inspect`; `go test ./internal/agent` quedó en verde
+siguiente: seguir reforzando parsers o avanzar a otra pieza pequeña del flujo
 bloqueos: ninguno
 [/IA-STEP]
 ```
@@ -439,6 +439,7 @@ bloqueos: ninguno
 - [ ] Persistencia de corridas.
 - [ ] Tests mÃ­nimos por etapa.
 - [ ] Registro de progreso para retomar trabajo.
+
 
 
 
