@@ -294,6 +294,35 @@ Cualquier agente puede leer el estado y continuar el trabajo.
 
 ---
 
+## Etapa 7 — Transformación Real de Datos
+
+### Objetivo
+Hacer que el código generado no sea solo un placeholder educativo, sino que realice la lectura, procesamiento y escritura real de los datos entre formatos.
+
+### Entregables
+- Generador de código (`GenerateMain`) con lógica de I/O real.
+- Soporte de transformación para pares de formatos prioritarios (JSON, CSV, XML, YAML).
+- Artefacto final (archivo de salida) generado físicamente en disco.
+
+### Checklist
+- [ ] El generador incluye código para abrir y decodificar el archivo `--input`.
+- [ ] El generador incluye lógica de mapeo de datos basada en el esquema.
+- [ ] El generador incluye lógica de codificación y escritura en el archivo `--output`.
+- [ ] Soporte verificado para JSON a CSV.
+- [ ] Soporte verificado para CSV a JSON.
+- [ ] Soporte verificado para YAML a JSON.
+- [ ] Manejo de errores de I/O en el código generado (archivos corruptos, permisos).
+
+### Pruebas mínimas
+- [ ] Test de ejecución E2E que verifique la creación del archivo de salida real.
+- [ ] Test de integridad: validar que los datos en el output coincidan con el input.
+- [ ] Test de transformación con tipos de datos complejos (arrays anidados, nulos).
+
+### Criterio de salida
+El agente genera artefactos de salida reales y válidos que contienen los datos transformados correctamente.
+
+---
+
 # División sugerida del trabajo por bloques
 
 ## Bloque A — Base y CLI
@@ -319,6 +348,10 @@ Cualquier agente puede leer el estado y continuar el trabajo.
 ## Bloque F — Trazabilidad final
 - Etapa 6 completa.
 - Registro consistente para retomar corridas.
+
+## Bloque G — Transformación Real
+- Etapa 7 completa.
+- Validación de integridad de datos.
 
 ---
 
@@ -377,11 +410,11 @@ Cada vez que se avance, actualizar este bloque con información concreta.
 ```text
 [IA-STEP]
 fecha: 2026-06-03
-etapa: FINAL
-subtarea: integración completa
+etapa: ETAPA_6
+subtarea: estabilización de trazabilidad y validación CLI
 estado: completado
-resultado: agente funcional de principio a fin integrado en el CLI con soporte de telemetría
-siguiente: proyecto finalizado
+resultado: se aisló `test_data/05_runtime_errors` del build normal con build tags y se refactorizó `cmd` para crear instancias limpias por prueba; `go test ./cmd` quedó en verde
+siguiente: decidir si avanzar a persistencia de corridas o revisar otro paquete pendiente
 bloqueos: ninguno
 [/IA-STEP]
 ```
@@ -406,3 +439,4 @@ bloqueos: ninguno
 - [ ] Persistencia de corridas.
 - [ ] Tests mínimos por etapa.
 - [ ] Registro de progreso para retomar trabajo.
+

@@ -4,48 +4,41 @@ Copyright © 2026 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/spf13/cobra"
 )
-
-// rootCmd represents the base command when called without any subcommands
-var rootCmd = &cobra.Command{
-	Use:   "morphgo",
-	Short: "A brief description of your application",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
-	// Run: func(cmd *cobra.Command, args []string) { },
-}
 
 var inputPath string
 var taskStr string
 var outputPath string
 var targetFormat string
 
-func init() {
-	rootCmd.PersistentFlags().StringVar(&inputPath, "input", "", "input file path")
-	rootCmd.PersistentFlags().StringVar(&taskStr, "task", "", "task description")
-	rootCmd.PersistentFlags().StringVar(&outputPath, "output", "", "output path")
-	rootCmd.PersistentFlags().StringVar(&targetFormat, "target", "", "target format")
-	runE := func(cmd *cobra.Command, args []string) error {
-		if inputPath == "" {
-			return fmt.Errorf("missing required flag: --input")
-		}
-		if taskStr == "" {
-			return fmt.Errorf("missing required flag: --task")
-		}
-		return nil
+// rootCmd represents the base command when called without any subcommands.
+var rootCmd = newRootCmd()
+
+func newRootCmd() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "morphgo",
+		Short: "A brief description of your application",
+		Long: `A longer description that spans multiple lines and likely contains
+examples and usage of using your application. For example:
+
+Cobra is a CLI library for Go that empowers applications.
+This application is a tool to generate the needed files
+to quickly create a Cobra application.`,
 	}
-	rootCmd.PersistentPreRunE = runE
-	rootCmd.RunE = runE
+
+	cmd.PersistentFlags().StringVar(&inputPath, "input", "", "input file path")
+	cmd.PersistentFlags().StringVar(&taskStr, "task", "", "task description")
+	cmd.PersistentFlags().StringVar(&outputPath, "output", "", "output path")
+	cmd.PersistentFlags().StringVar(&targetFormat, "target", "", "target format")
+	_ = cmd.MarkPersistentFlagRequired("input")
+	_ = cmd.MarkPersistentFlagRequired("task")
+	cmd.PersistentPreRunE = func(cmd *cobra.Command, args []string) error { return nil }
+	cmd.RunE = func(cmd *cobra.Command, args []string) error { return nil }
+	cmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	return cmd
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -58,13 +51,5 @@ func Execute() {
 }
 
 func init() {
-	// Here you will define your flags and configuration settings.
-	// Cobra supports persistent flags, which, if defined here,
-	// will be global for your application.
-
-	// rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.morphgo.yaml)")
-
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	rootCmd.AddCommand(newRunCmd())
 }

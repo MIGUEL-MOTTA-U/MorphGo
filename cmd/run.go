@@ -10,23 +10,21 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var runCmd = &cobra.Command{
-	Use:   "run",
-	Short: "Execute the agent run pipeline",
-	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
-		return rootCmd.PersistentPreRunE(cmd, args)
-	},
-	RunE: func(cmd *cobra.Command, args []string) error {
+func newRunCmd() *cobra.Command {
+	return &cobra.Command{
+		Use:   "run",
+		Short: "Execute the agent run pipeline",
+		RunE: func(cmd *cobra.Command, args []string) error {
 		fmt.Printf("Starting run: %s -> %s (task: %s)\n", inputPath, targetFormat, taskStr)
 
 		log, err := agent.Run(inputPath, taskStr, targetFormat)
-		
+
 		// Always try to save the trace
 		traceDir := "runs"
 		if outputPath != "" {
 			traceDir = outputPath
 		}
-		
+
 		saveDir, saveErr := telemetry.SaveRun(traceDir, log)
 		if saveErr != nil {
 			fmt.Fprintf(os.Stderr, "Warning: failed to save run trace: %v\n", saveErr)
@@ -40,9 +38,6 @@ var runCmd = &cobra.Command{
 
 		fmt.Println("Run completed successfully!")
 		return nil
-	},
-}
-
-func init() {
-	rootCmd.AddCommand(runCmd)
+		},
+	}
 }
