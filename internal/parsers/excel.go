@@ -37,7 +37,9 @@ func InspectExcel(path string) (schema.Summary, error) {
 			return schema.Summary{}, err
 		}
 		if len(rows) > 0 {
-			summary.Rows += len(rows)
+			if len(rows) > 1 {
+				summary.Rows += len(rows) - 1
+			}
 		}
 	}
 

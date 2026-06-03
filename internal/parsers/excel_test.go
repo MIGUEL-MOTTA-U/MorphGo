@@ -35,8 +35,8 @@ func TestInspectExcel_ValidWorkbook(t *testing.T) {
 	if !summary.HasHeader {
 		t.Fatal("expected workbook structure to be detected")
 	}
-	if summary.Rows == 0 {
-		t.Fatal("expected row count greater than zero")
+	if summary.Rows != 1 {
+		t.Fatalf("expected 1 data row, got %d", summary.Rows)
 	}
 }
 
@@ -88,12 +88,18 @@ func TestInspectExcel_MultipleSheets(t *testing.T) {
 	if err := f.SetCellValue(first, "A1", "name"); err != nil {
 		t.Fatalf("set first sheet cell: %v", err)
 	}
+	if err := f.SetCellValue(first, "A2", "ana"); err != nil {
+		t.Fatalf("set first sheet data: %v", err)
+	}
 	second, err := f.NewSheet("Sheet2")
 	if err != nil {
 		t.Fatalf("create second sheet: %v", err)
 	}
 	if err := f.SetCellValue("Sheet2", "A1", "age"); err != nil {
 		t.Fatalf("set second sheet cell: %v", err)
+	}
+	if err := f.SetCellValue("Sheet2", "A2", 30); err != nil {
+		t.Fatalf("set second sheet data: %v", err)
 	}
 	f.SetActiveSheet(second)
 	if err := f.SaveAs(path); err != nil {
@@ -105,8 +111,8 @@ func TestInspectExcel_MultipleSheets(t *testing.T) {
 	if err != nil {
 		t.Fatalf("InspectExcel returned error: %v", err)
 	}
-	if summary.Rows == 0 {
-		t.Fatal("expected rows across multiple sheets")
+	if summary.Rows != 2 {
+		t.Fatalf("expected 2 data rows across multiple sheets, got %d", summary.Rows)
 	}
 	if len(summary.Columns) != 2 {
 		t.Fatalf("expected sheet names as columns, got %#v", summary.Columns)

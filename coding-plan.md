@@ -410,11 +410,11 @@ Cada vez que se avance, actualizar este bloque con informaciÃ³n concreta.
 ```text
 [IA-STEP]
 fecha: 2026-06-03
-etapa: ETAPA_2
-subtarea: asegurar serialización de rutas en plan
+etapa: ETAPA_1
+subtarea: corregir conteo de filas en Excel
 estado: completado
-resultado: `Plan` ahora verifica serialización de `input_path` y `output_path`; `go test ./internal/schema` quedó en verde
-siguiente: seguir reforzando planificador o avanzar a otra pieza pequeña del flujo
+resultado: `InspectExcel` ahora cuenta solo filas de datos y la prueba de múltiples hojas quedó alineada; `go test ./internal/parsers` quedó en verde
+siguiente: seguir reforzando parsers o avanzar a otra pieza pequeña del flujo
 bloqueos: ninguno
 [/IA-STEP]
 ```
@@ -439,6 +439,7 @@ bloqueos: ninguno
 - [ ] Persistencia de corridas.
 - [ ] Tests mÃ­nimos por etapa.
 - [ ] Registro de progreso para retomar trabajo.
+
 
 
 
