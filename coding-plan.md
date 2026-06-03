@@ -411,9 +411,9 @@ Cada vez que se avance, actualizar este bloque con informaciÃ³n concreta.
 [IA-STEP]
 fecha: 2026-06-03
 etapa: ETAPA_1
-subtarea: cubrir error de CSV malformado
+subtarea: cubrir detección básica de Markdown
 estado: completado
-resultado: se agregó prueba para CSV malformado y `go test ./internal/parsers` quedó en verde
+resultado: se agregó prueba para detectar párrafos y listas en Markdown; `go test ./internal/parsers` quedó en verde
 siguiente: seguir reforzando parsers o avanzar a otra pieza pequeña del flujo
 bloqueos: ninguno
 [/IA-STEP]
@@ -439,6 +439,7 @@ bloqueos: ninguno
 - [ ] Persistencia de corridas.
 - [ ] Tests mÃ­nimos por etapa.
 - [ ] Registro de progreso para retomar trabajo.
+
 
 
 
