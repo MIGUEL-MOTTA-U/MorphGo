@@ -410,11 +410,11 @@ Cada vez que se avance, actualizar este bloque con informaciÃ³n concreta.
 ```text
 [IA-STEP]
 fecha: 2026-06-03
-etapa: ETAPA_5
-subtarea: cubrir error repetido del retry loop
+etapa: ETAPA_4
+subtarea: cubrir fallo de inspección en orquestador
 estado: completado
-resultado: `retryRunPlan` ahora tiene prueba explícita para generación repetida con `ErrRepeatedError`; `go test ./internal/codeact` quedó en verde
-siguiente: seguir reforzando feedback loop o cerrar otra pieza pequeña del flujo
+resultado: se agregó prueba para `Run` con extensión no soportada; `go test ./internal/agent` quedó en verde
+siguiente: seguir reforzando el flujo de agente o avanzar al siguiente hueco pequeño
 bloqueos: ninguno
 [/IA-STEP]
 ```
@@ -439,6 +439,7 @@ bloqueos: ninguno
 - [ ] Persistencia de corridas.
 - [ ] Tests mÃ­nimos por etapa.
 - [ ] Registro de progreso para retomar trabajo.
+
 
 
 
