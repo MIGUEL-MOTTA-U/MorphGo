@@ -410,11 +410,11 @@ Cada vez que se avance, actualizar este bloque con informaciÃ³n concreta.
 ```text
 [IA-STEP]
 fecha: 2026-06-03
-etapa: ETAPA_2
-subtarea: ampliar detección de intención
+etapa: ETAPA_3
+subtarea: depurar cobertura del generador temporal
 estado: completado
-resultado: el planificador ahora reconoce variantes españolas adicionales de conversión como "convierte" y "transforma"; `go test ./internal/schema` quedó en verde
-siguiente: decidir si la próxima mejora pequeña debe ir en planificador, parser o trazabilidad
+resultado: se mantuvo una sola prueba para `WriteTempMain` y quedó validado `go test ./internal/codeact`
+siguiente: elegir si conviene reforzar el generador o el runner de sandbox
 bloqueos: ninguno
 [/IA-STEP]
 ```
@@ -439,6 +439,7 @@ bloqueos: ninguno
 - [ ] Persistencia de corridas.
 - [ ] Tests mÃ­nimos por etapa.
 - [ ] Registro de progreso para retomar trabajo.
+
 
 
 
