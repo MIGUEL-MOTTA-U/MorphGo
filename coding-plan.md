@@ -411,9 +411,9 @@ Cada vez que se avance, actualizar este bloque con informaciÃ³n concreta.
 [IA-STEP]
 fecha: 2026-06-03
 etapa: ETAPA_2
-subtarea: rechazar prompts en blanco
+subtarea: asegurar serialización de rutas en plan
 estado: completado
-resultado: `InferPlan` ahora cubre prompts vacíos y en blanco; `go test ./internal/schema` quedó en verde
+resultado: `Plan` ahora verifica serialización de `input_path` y `output_path`; `go test ./internal/schema` quedó en verde
 siguiente: seguir reforzando planificador o avanzar a otra pieza pequeña del flujo
 bloqueos: ninguno
 [/IA-STEP]
@@ -439,6 +439,7 @@ bloqueos: ninguno
 - [ ] Persistencia de corridas.
 - [ ] Tests mÃ­nimos por etapa.
 - [ ] Registro de progreso para retomar trabajo.
+
 
 
 

@@ -69,12 +69,14 @@ func TestInferPlan_MultiOperationPrompt(t *testing.T) {
 
 func TestPlanJSONSerializable(t *testing.T) {
 	plan := Plan{
-		Objective: "convert json to csv",
-		Source:    "json",
-		Target:    "csv",
-		Operation: "convert",
-		Steps:     []string{"inspect json", "convert into csv"},
-		Summary:   Summary{Format: "json", HasHeader: true, Columns: []string{"name"}},
+		Objective:  "convert json to csv",
+		Source:     "json",
+		Target:     "csv",
+		Operation:  "convert",
+		InputPath:  "in.json",
+		OutputPath: "out.csv",
+		Steps:      []string{"inspect json", "convert into csv"},
+		Summary:    Summary{Format: "json", HasHeader: true, Columns: []string{"name"}},
 	}
 
 	data, err := json.Marshal(plan)
@@ -83,6 +85,9 @@ func TestPlanJSONSerializable(t *testing.T) {
 	}
 	if len(data) == 0 {
 		t.Fatal("expected json output")
+	}
+	if !strings.Contains(string(data), "\"input_path\":\"in.json\"") || !strings.Contains(string(data), "\"output_path\":\"out.csv\"") {
+		t.Fatalf("expected paths in json output, got %s", string(data))
 	}
 }
 
