@@ -411,10 +411,10 @@ Cada vez que se avance, actualizar este bloque con informaciÃ³n concreta.
 [IA-STEP]
 fecha: 2026-06-03
 etapa: ETAPA_6
-subtarea: estabilizaciÃ³n de trazabilidad y validaciÃ³n CLI
+subtarea: robustecer persistencia de corridas
 estado: completado
-resultado: se aislÃ³ `test_data/05_runtime_errors` del build normal con build tags y se refactorizÃ³ `cmd` para crear instancias limpias por prueba; `go test ./cmd` quedÃ³ en verde
-siguiente: decidir si avanzar a persistencia de corridas o revisar otro paquete pendiente
+resultado: se agregó cobertura para el caso en que `SaveRun` recibe una ruta base inválida y falla limpiamente; `go test ./internal/telemetry` quedó en verde
+siguiente: revisar otra pieza pequeña de trazabilidad o persistencia si hace falta
 bloqueos: ninguno
 [/IA-STEP]
 ```
@@ -439,4 +439,5 @@ bloqueos: ninguno
 - [ ] Persistencia de corridas.
 - [ ] Tests mÃ­nimos por etapa.
 - [ ] Registro de progreso para retomar trabajo.
+
 

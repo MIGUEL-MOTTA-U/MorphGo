@@ -85,3 +85,16 @@ func TestSaveRun_GeneratesIDAndTimestamp(t *testing.T) {
 		t.Error("expected generated timestamp, got zero")
 	}
 }
+
+func TestSaveRun_InvalidBaseDir(t *testing.T) {
+	tmp := t.TempDir()
+	basePath := filepath.Join(tmp, "not-a-dir")
+	if err := os.WriteFile(basePath, []byte("file"), 0o600); err != nil {
+		t.Fatalf("failed to create blocking file: %v", err)
+	}
+
+	_, err := SaveRun(basePath, RunLog{})
+	if err == nil {
+		t.Fatal("expected error when base dir is not a directory")
+	}
+}
