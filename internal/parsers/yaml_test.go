@@ -44,6 +44,26 @@ func TestInspectYAML_List(t *testing.T) {
 	}
 }
 
+func TestInspectYAML_ListOfMaps(t *testing.T) {
+	dir := t.TempDir()
+	path := filepath.Join(dir, "list-of-maps.yaml")
+	content := "- name: ana\n  age: 30\n- name: bob\n  age: 28\n"
+	if err := os.WriteFile(path, []byte(content), 0o600); err != nil {
+		t.Fatalf("write yaml: %v", err)
+	}
+
+	summary, err := InspectYAML(path)
+	if err != nil {
+		t.Fatalf("InspectYAML returned error: %v", err)
+	}
+	if summary.Rows != 2 {
+		t.Fatalf("expected 2 items, got %d", summary.Rows)
+	}
+	if len(summary.Columns) != 2 {
+		t.Fatalf("expected 2 columns, got %#v", summary.Columns)
+	}
+}
+
 func TestInspectYAML_Invalid(t *testing.T) {
 	dir := t.TempDir()
 	path := filepath.Join(dir, "broken.yaml")

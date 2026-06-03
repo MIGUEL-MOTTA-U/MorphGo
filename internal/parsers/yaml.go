@@ -34,6 +34,14 @@ func InspectYAML(path string) (schema.Summary, error) {
 	case []any:
 		summary.Rows = len(v)
 		summary.HasHeader = true
+		if len(v) > 0 {
+			if first, ok := v[0].(map[string]any); ok {
+				summary.Columns = make([]string, 0, len(first))
+				for key := range first {
+					summary.Columns = append(summary.Columns, key)
+				}
+			}
+		}
 	default:
 		summary.HasHeader = true
 		summary.Columns = []string{"value"}
