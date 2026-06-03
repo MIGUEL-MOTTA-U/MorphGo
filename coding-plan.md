@@ -411,9 +411,9 @@ Cada vez que se avance, actualizar este bloque con informaciÃ³n concreta.
 [IA-STEP]
 fecha: 2026-06-03
 etapa: ETAPA_1
-subtarea: cubrir error de XML vacío
+subtarea: cubrir arreglo de objetos JSON
 estado: completado
-resultado: se agregó prueba para archivo XML vacío y `go test ./internal/parsers` quedó en verde
+resultado: se agregó prueba para arreglo de objetos en JSON y `go test ./internal/parsers` quedó en verde
 siguiente: seguir reforzando parsers o avanzar a otra pieza pequeña del flujo
 bloqueos: ninguno
 [/IA-STEP]
@@ -439,6 +439,7 @@ bloqueos: ninguno
 - [ ] Persistencia de corridas.
 - [ ] Tests mÃ­nimos por etapa.
 - [ ] Registro de progreso para retomar trabajo.
+
 
 
 
