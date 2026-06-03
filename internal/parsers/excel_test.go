@@ -78,3 +78,37 @@ func TestInspectExcel_CorruptFile(t *testing.T) {
 		t.Fatal("expected error for corrupt file")
 	}
 }
+
+func TestInspectExcel_MultipleSheets(t *testing.T) {
+	dir := t.TempDir()
+	path := filepath.Join(dir, "multi-sheet.xlsx")
+
+	f := excelize.NewFile()
+	first := f.GetSheetName(0)
+	if err := f.SetCellValue(first, "A1", "name"); err != nil {
+		t.Fatalf("set first sheet cell: %v", err)
+	}
+	second, err := f.NewSheet("Sheet2")
+	if err != nil {
+		t.Fatalf("create second sheet: %v", err)
+	}
+	if err := f.SetCellValue("Sheet2", "A1", "age"); err != nil {
+		t.Fatalf("set second sheet cell: %v", err)
+	}
+	f.SetActiveSheet(second)
+	if err := f.SaveAs(path); err != nil {
+		t.Fatalf("save workbook: %v", err)
+	}
+	_ = f.Close()
+
+	summary, err := InspectExcel(path)
+	if err != nil {
+		t.Fatalf("InspectExcel returned error: %v", err)
+	}
+	if summary.Rows == 0 {
+		t.Fatal("expected rows across multiple sheets")
+	}
+	if len(summary.Columns) != 2 {
+		t.Fatalf("expected sheet names as columns, got %#v", summary.Columns)
+	}
+}
