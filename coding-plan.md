@@ -377,11 +377,11 @@ Cada vez que se avance, actualizar este bloque con información concreta.
 ```text
 [IA-STEP]
 fecha: 2026-06-03
-etapa: ETAPA_5
-subtarea: pasar historial al generador
+etapa: ETAPA_6
+subtarea: persistencia de trazabilidad
 estado: completado
-resultado: el generador de código ahora recibe el historial de intentos para permitir autocorrección real
-siguiente: implementar persistencia de contexto (Etapa 6)
+resultado: implementado RunLog y SaveRun para guardar historial, plan y resultados en directorios de corrida
+siguiente: integrar trazabilidad en el comando run (Etapa 6 final)
 bloqueos: ninguno
 [/IA-STEP]
 ```
