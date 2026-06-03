@@ -100,3 +100,16 @@ func TestInspectCSV_SingleField(t *testing.T) {
 		t.Fatalf("expected 1 row, got %d", summary.Rows)
 	}
 }
+
+func TestInspectCSV_InvalidFormat(t *testing.T) {
+	dir := t.TempDir()
+	path := filepath.Join(dir, "invalid.csv")
+	if err := os.WriteFile(path, []byte("\"name,age\nana,30\n"), 0o600); err != nil {
+		t.Fatalf("write csv: %v", err)
+	}
+
+	_, err := InspectCSV(path)
+	if err == nil {
+		t.Fatal("expected error for malformed csv")
+	}
+}

@@ -410,11 +410,11 @@ Cada vez que se avance, actualizar este bloque con informaciÃ³n concreta.
 ```text
 [IA-STEP]
 fecha: 2026-06-03
-etapa: ETAPA_4
-subtarea: cubrir fallo de inspección en orquestador
+etapa: ETAPA_1
+subtarea: cubrir error de CSV malformado
 estado: completado
-resultado: se agregó prueba para `Run` con extensión no soportada; `go test ./internal/agent` quedó en verde
-siguiente: seguir reforzando el flujo de agente o avanzar al siguiente hueco pequeño
+resultado: se agregó prueba para CSV malformado y `go test ./internal/parsers` quedó en verde
+siguiente: seguir reforzando parsers o avanzar a otra pieza pequeña del flujo
 bloqueos: ninguno
 [/IA-STEP]
 ```
@@ -439,6 +439,7 @@ bloqueos: ninguno
 - [ ] Persistencia de corridas.
 - [ ] Tests mÃ­nimos por etapa.
 - [ ] Registro de progreso para retomar trabajo.
+
 
 
 
