@@ -377,11 +377,11 @@ Cada vez que se avance, actualizar este bloque con información concreta.
 ```text
 [IA-STEP]
 fecha: 2026-06-03
-etapa: ETAPA_6
-subtarea: persistencia de trazabilidad
+etapa: FINAL
+subtarea: integración completa
 estado: completado
-resultado: implementado RunLog y SaveRun para guardar historial, plan y resultados en directorios de corrida
-siguiente: integrar trazabilidad en el comando run (Etapa 6 final)
+resultado: agente funcional de principio a fin integrado en el CLI con soporte de telemetría
+siguiente: proyecto finalizado
 bloqueos: ninguno
 [/IA-STEP]
 ```
