@@ -397,11 +397,11 @@ agente replay --run-id 2026-06-01-001
 Este bloque sirve para que cualquier agente pueda leer el archivo, ubicar el estado y continuar.
 
 ## Estado actual
-- Etapa actual: `ETAPA_0`
-- Subtarea actual: `pendiente`
-- Última acción realizada: `ninguna`
+- Etapa actual: `ETAPA_7`
+- Subtarea actual: `implementar transformación CSV a JSON`
+- Última acción realizada: `completar e2e de JSON a CSV`
 - Último error relevante: `ninguno`
-- Próximo paso: `definir e implementar la siguiente tarea pequeña`
+- Próximo paso: `implementar generador de código para CSV a JSON`
 
 ## Formato de actualización
 
@@ -409,15 +409,16 @@ Cada vez que se avance, actualizar este bloque con información concreta.
 
 ```text
 [IA-STEP]
-fecha: 2026-06-03
-etapa: ETAPA_4
-subtarea: validar camino feliz del orquestador
+fecha: 2026-06-04
+etapa: ETAPA_7
+subtarea: implementar transformación de CSV a JSON
 estado: completado
-resultado: `Run` ahora tiene prueba E2E peque�a con JSON v�lido y termina en `success`; `go test ./internal/agent` qued� en verde
-siguiente: seguir reforzando `agent` o volver a otro borde peque�o del flujo
+resultado: `Run` ahora soporta conversión real de CSV a JSON; tests E2E en `internal/agent` en verde.
+siguiente: implementar transformación de YAML a JSON o siguiente par de formatos prioritarios.
 bloqueos: ninguno
 [/IA-STEP]
 ```
+
 
 ## Reglas para la IA que retome el trabajo
 1. Leer el estado actual.

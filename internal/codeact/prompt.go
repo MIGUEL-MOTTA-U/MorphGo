@@ -26,6 +26,13 @@ func GenerateMain(plan schema.Plan, history []Attempt) (string, error) {
 		return generateJsonToCsv(plan)
 	}
 
+	if plan.Source == "csv" && plan.Target == "json" && plan.Operation == "convert" {
+		if strings.TrimSpace(plan.InputPath) == "" || strings.TrimSpace(plan.OutputPath) == "" {
+			return "", errors.New("csv to json plan requires input and output paths")
+		}
+		return generateCsvToJson(plan)
+	}
+
 	var b strings.Builder
 	b.WriteString("package main\n\n")
 	b.WriteString("import \"fmt\"\n\n")
@@ -105,6 +112,86 @@ func generateJsonToCsv(plan schema.Plan) (string, error) {
 		b.WriteString("\t}\n")
 	}
 
+	b.WriteString("\treturn nil\n")
+	b.WriteString("}\n\n")
+
+	b.WriteString("func main() {\n")
+	b.WriteString("\tif err := run(); err != nil {\n")
+	b.WriteString("\t\tfmt.Fprintf(os.Stderr, \"error: %v\\n\", err)\n")
+	b.WriteString("\t\tos.Exit(1)\n")
+	b.WriteString("\t}\n")
+	b.WriteString("}\n")
+
+	return b.String(), nil
+}
+
+func generateCsvToJson(plan schema.Plan) (string, error) {
+	var b strings.Builder
+	b.WriteString("package main\n\n")
+	b.WriteString("import (\n")
+	b.WriteString("\t\"encoding/csv\"\n")
+	b.WriteString("\t\"encoding/json\"\n")
+	b.WriteString("\t\"fmt\"\n")
+	b.WriteString("\t\"os\"\n")
+	b.WriteString(")\n\n")
+
+	b.WriteString("func run() error {\n")
+	fmt.Fprintf(&b, "\tinputPath := %q\n", plan.InputPath)
+	fmt.Fprintf(&b, "\toutputPath := %q\n", plan.OutputPath)
+
+	b.WriteString("\tf, err := os.Open(inputPath)\n")
+	b.WriteString("\tif err != nil { return err }\n")
+	b.WriteString("\tdefer f.Close()\n\n")
+
+	b.WriteString("\tr := csv.NewReader(f)\n")
+	if plan.Summary.Separator != 0 && plan.Summary.Separator != ',' {
+		fmt.Fprintf(&b, "\tr.Comma = %q\n", string(plan.Summary.Separator))
+	}
+
+	b.WriteString("\trecords, err := r.ReadAll()\n")
+	b.WriteString("\tif err != nil { return err }\n\n")
+
+	b.WriteString("\tif len(records) == 0 { return fmt.Errorf(\"csv file is empty\") }\n\n")
+
+	b.WriteString("\tvar headers []string\n")
+	b.WriteString("\tstartIndex := 0\n")
+	if plan.Summary.HasHeader {
+		b.WriteString("\tif len(records) > 0 {\n")
+		b.WriteString("\t\theaders = records[0]\n")
+		b.WriteString("\t\tstartIndex = 1\n")
+		b.WriteString("\t}\n")
+	} else if len(plan.Summary.Columns) > 0 {
+		b.WriteString("\theaders = []string{")
+		for i, col := range plan.Summary.Columns {
+			if i > 0 {
+				b.WriteString(", ")
+			}
+			fmt.Fprintf(&b, "%q", col)
+		}
+		b.WriteString("}\n")
+	} else {
+		b.WriteString("\tif len(records) > 0 {\n")
+		b.WriteString("\t\theaders = make([]string, len(records[0]))\n")
+		b.WriteString("\t\tfor i := range headers { headers[i] = fmt.Sprintf(\"column_%d\", i) }\n")
+		b.WriteString("\t}\n")
+	}
+
+	b.WriteString("\tvar data []map[string]interface{}\n")
+	b.WriteString("\tfor i := startIndex; i < len(records); i++ {\n")
+	b.WriteString("\t\trow := records[i]\n")
+	b.WriteString("\t\tobj := make(map[string]interface{})\n")
+	b.WriteString("\t\tfor j, val := range row {\n")
+	b.WriteString("\t\t\tif j < len(headers) {\n")
+	b.WriteString("\t\t\t\tobj[headers[j]] = val\n")
+	b.WriteString("\t\t\t}\n")
+	b.WriteString("\t\t}\n")
+	b.WriteString("\t\tdata = append(data, obj)\n")
+	b.WriteString("\t}\n\n")
+
+	b.WriteString("\tjsonData, err := json.MarshalIndent(data, \"\", \"  \")\n")
+	b.WriteString("\tif err != nil { return err }\n\n")
+
+	b.WriteString("\tif err := os.WriteFile(outputPath, jsonData, 0644); err != nil { return err }\n")
 	b.WriteString("\treturn nil\n")
 	b.WriteString("}\n\n")
 

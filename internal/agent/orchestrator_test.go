@@ -34,3 +34,24 @@ func TestRun_SuccessfulJsonToCsv(t *testing.T) {
 		t.Fatalf("expected default output path, got %q", log.Plan.OutputPath)
 	}
 }
+
+func TestRun_SuccessfulCsvToJson(t *testing.T) {
+	dir := t.TempDir()
+	inputPath := filepath.Join(dir, "input.csv")
+	csvContent := "name,age\nana,30\nbeatriz,25"
+	if err := os.WriteFile(inputPath, []byte(csvContent), 0o600); err != nil {
+		t.Fatalf("write input csv: %v", err)
+	}
+
+	log, err := Run(inputPath, "convert csv to json", "json")
+	if err != nil {
+		t.Fatalf("Run returned error: %v", err)
+	}
+	if log.Status != "success" {
+		t.Fatalf("expected success status, got %q", log.Status)
+	}
+	if log.Plan.OutputPath != "output.json" {
+		t.Fatalf("expected default output path, got %q", log.Plan.OutputPath)
+	}
+}
+
