@@ -411,10 +411,10 @@ Cada vez que se avance, actualizar este bloque con información concreta.
 [IA-STEP]
 fecha: 2026-06-04
 etapa: ETAPA_7
-subtarea: implementar transformación de XML a JSON
+subtarea: implementar transformación de JSON a YAML
 estado: completado
-resultado: `Run` ahora soporta conversión real de XML a JSON; tests E2E en `internal/agent` en verde.
-siguiente: implementar transformación de JSON a YAML o siguiente par de formatos prioritarios.
+resultado: `Run` ahora soporta conversión real de JSON a YAML; tests E2E en `internal/agent` en verde.
+siguiente: implementar transformación de JSON a XML o siguiente par de formatos prioritarios.
 bloqueos: ninguno
 [/IA-STEP]
 ```

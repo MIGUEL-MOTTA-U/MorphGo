@@ -40,6 +40,13 @@ func GenerateMain(plan schema.Plan, history []Attempt) (string, error) {
 		return generateYamlToJson(plan)
 	}
 
+	if plan.Source == "json" && plan.Target == "yaml" && plan.Operation == "convert" {
+		if strings.TrimSpace(plan.InputPath) == "" || strings.TrimSpace(plan.OutputPath) == "" {
+			return "", errors.New("json to yaml plan requires input and output paths")
+		}
+		return generateJsonToYaml(plan)
+	}
+
 	if plan.Source == "xml" && plan.Target == "json" && plan.Operation == "convert" {
 		if strings.TrimSpace(plan.InputPath) == "" || strings.TrimSpace(plan.OutputPath) == "" {
 			return "", errors.New("xml to json plan requires input and output paths")
@@ -243,6 +250,43 @@ func generateYamlToJson(plan schema.Plan) (string, error) {
 	b.WriteString("\tif err != nil { return err }\n\n")
 
 	b.WriteString("\tif err := os.WriteFile(outputPath, jsonData, 0644); err != nil { return err }\n")
+	b.WriteString("\treturn nil\n")
+	b.WriteString("}\n\n")
+
+	b.WriteString("func main() {\n")
+	b.WriteString("\tif err := run(); err != nil {\n")
+	b.WriteString("\t\tfmt.Fprintf(os.Stderr, \"error: %v\\n\", err)\n")
+	b.WriteString("\t\tos.Exit(1)\n")
+	b.WriteString("\t}\n")
+	b.WriteString("}\n")
+
+	return b.String(), nil
+}
+
+func generateJsonToYaml(plan schema.Plan) (string, error) {
+	var b strings.Builder
+	b.WriteString("package main\n\n")
+	b.WriteString("import (\n")
+	b.WriteString("\t\"encoding/json\"\n")
+	b.WriteString("\t\"fmt\"\n")
+	b.WriteString("\t\"os\"\n")
+	b.WriteString("\t\"gopkg.in/yaml.v3\"\n")
+	b.WriteString(")\n\n")
+
+	b.WriteString("func run() error {\n")
+	fmt.Fprintf(&b, "\tinputPath := %q\n", plan.InputPath)
+	fmt.Fprintf(&b, "\toutputPath := %q\n", plan.OutputPath)
+
+	b.WriteString("\tdata, err := os.ReadFile(inputPath)\n")
+	b.WriteString("\tif err != nil { return err }\n\n")
+
+	b.WriteString("\tvar value any\n")
+	b.WriteString("\tif err := json.Unmarshal(data, &value); err != nil { return err }\n\n")
+
+	b.WriteString("\tyamlData, err := yaml.Marshal(value)\n")
+	b.WriteString("\tif err != nil { return err }\n\n")
+
+	b.WriteString("\tif err := os.WriteFile(outputPath, yamlData, 0644); err != nil { return err }\n")
 	b.WriteString("\treturn nil\n")
 	b.WriteString("}\n\n")
 
