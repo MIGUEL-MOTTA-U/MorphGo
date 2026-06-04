@@ -18,7 +18,7 @@ Construir un **prototipo/sandbox** de un agente CLI en Go que:
 - **Sandbox primero**: cualquier ejecución de código generado debe ir aislada.
 - **Progreso por etapas**: no avanzar si la etapa actual no pasa sus pruebas.
 - **Pruebas unitarias estándar**: suficientes para asegurar robustez básica y manejo de errores, sin sobreingeniería.
-- **Tareas paralelizables**: cuando dos partes sean independientes, se pueden resolver en paralelo.
+- **Tareas paralelizables**: cuando dos partes son independientes, se pueden resolver en paralelo.
  - **Prohibición de palabras**: las palabras prohibidas se listan en el archivo `.words` (no incluido en el repositorio).
 
 ---
@@ -50,7 +50,7 @@ Construir un **prototipo/sandbox** de un agente CLI en Go que:
 
 ---
 
-# Etapas de implementación
+## Etapas de implementación
 
 Cada etapa tiene una regla: **solo se avanza si las pruebas de esa etapa pasan**.
 
@@ -177,7 +177,7 @@ Emitir código Go temporal para la transformación concreta.
 - [ ] El código evita usar reflexión salvo que sea imprescindible.
 
 ### Pruebas mínimas
-- [ ] Test de generación con un plan conocido.
+- [ la generación de código con un plan conocido.
 - [ ] Test de que el código no queda vacío.
 - [ ] Test de que contiene imports válidos.
 - [ ] Test de que no produce funciones duplicadas.
@@ -275,7 +275,7 @@ Dejar evidencia suficiente para retomar una corrida desde el último estado úti
 - [ ] Guarda esquema.
 - [ ] Guarda plan.
 - [ ] Guarda código generado.
-- [ ] Guarda stdout/stderr.
+- [ la captura de stdout/stderr.
 - [ ] Guarda decisión de éxito o fracaso.
 - [ ] Guarda etapa actual y número de iteración.
 
@@ -305,16 +305,19 @@ Hacer que el código generado no sea solo un placeholder educativo, sino que rea
 - Artefacto final (archivo de salida) generado físicamente en disco.
 
 ### Checklist
-- [ ] El generador incluye código para abrir y decodificar el archivo `--input`.
-- [ ] El generador incluye lógica de mapeo de datos basada en el esquema.
-- [ ] El generador incluye lógica de codificación y escritura en el archivo `--output`.
-- [ ] Soporte verificado para JSON a CSV.
-- [ ] Soporte verificado para CSV a JSON.
-- [ ] Soporte verificado para YAML a JSON.
+- [x] El generador incluye código para abrir y decodificar el archivo `--input`.
+- [x] El generador incluye lógica de mapeo de datos basada en el esquema.
+- [x] El generador incluye lógica de codificación y escritura en el archivo `--output`.
+- [x] Soporte verificado para JSON a CSV.
+- [x] Soporte verificado para CSV a JSON.
+- [x] Soporte verificado para YAML a JSON.
+- [x] Soporte verificado para JSON a YAML.
+- [x] Soporte verificado para JSON a XML.
+- [x] Soporte verificado para XML a JSON.
 - [ ] Manejo de errores de I/O en el código generado (archivos corruptos, permisos).
 
 ### Pruebas mínimas
-- [ ] Test de ejecución E2E que verifique la creación del archivo de salida real.
+- [x] Test de ejecución E2E que verifique la creación del archivo de salida real.
 - [ ] Test de integridad: validar que los datos en el output coincidan con el input.
 - [ ] Test de transformación con tipos de datos complejos (arrays anidados, nulos).
 
@@ -387,7 +390,6 @@ agente replay --run-id 2026-06-01-001
 - No hace falta arquitectura hexagonal completa.
 - No hace falta plugin system.
 - No hace falta observabilidad pesada.
-- No hace falta orquestación distribuida.
 - No hace falta un framework de agentes complejo.
 
 ---
@@ -398,10 +400,11 @@ Este bloque sirve para que cualquier agente pueda leer el archivo, ubicar el est
 
 ## Estado actual
 - Etapa actual: `ETAPA_7`
-- Subtarea actual: `implementar transformación CSV a JSON`
-- Última acción realizada: `completar e2e de JSON a CSV`
+- Subtarea actual: implementar transformación de XML a JSON
+- Última acción realizada: completar e2e de XML a JSON
 - Último error relevante: `ninguno`
-- Próximo paso: `implementar generador de código para CSV a JSON`
+- Próximo paso: validar integridad de datos en transformaciones complejas.
+- Bloqueos: `ninguno`
 
 ## Formato de actualización
 
@@ -411,53 +414,10 @@ Cada vez que se avance, actualizar este bloque con información concreta.
 [IA-STEP]
 fecha: 2026-06-04
 etapa: ETAPA_7
-subtarea: implementar transformación de JSON a YAML
+subtarea: implementar transformación de XML a JSON
 estado: completado
-resultado: `Run` ahora soporta conversión real de JSON a YAML; tests E2E en `internal/agent` en verde.
-siguiente: implementar transformación de JSON a XML o siguiente par de formatos prioritarios.
+resultado: `Run` ahora soporta conversión real de XML a JSON; tests E2E en `internal/agent` en verde.
+siguiente: validar integridad de datos en transformaciones complejas.
 bloqueos: ninguno
 [/IA-STEP]
 ```
-
-
-## Reglas para la IA que retome el trabajo
-1. Leer el estado actual.
-2. Verificar la última etapa completada.
-3. Ejecutar o revisar los tests de esa etapa.
-4. Solo avanzar si la etapa actual está estable.
-5. Escribir una nueva entrada `[IA-STEP]` al finalizar cada avance.
-
----
-
-# Lista de verificación global
-
-- [ ] CLI base funcionando.
-- [ ] Inspección por tipo de archivo.
-- [ ] Planificación desde esquema.
-- [ ] Generación de código Go temporal.
-- [ ] Ejecución en sandbox.
-- [ ] Feedback loop con corrección.
-- [ ] Persistencia de corridas.
-- [ ] Tests mínimos por etapa.
-- [ ] Registro de progreso para retomar trabajo.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

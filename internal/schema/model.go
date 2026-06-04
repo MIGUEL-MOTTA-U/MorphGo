@@ -11,10 +11,12 @@ type Summary struct {
 
 // Plan describes a minimal transformation to execute.
 type Plan struct {
-	Objective string   `json:"objective"`
-	Source    string   `json:"source"`
-	Target    string   `json:"target"`
-	Operation string   `json:"operation"`
-	Steps     []string `json:"steps"`
-	Summary   Summary  `json:"summary"`
+	Objective  string   `json:"objective"`
+	Source     string   `json:"source"`
+	Target     string   `json:"target"`
+	InputPath  string   `json:"input_path"`
+	OutputPath string   `json:"output_path"`
+	Operation  string   `json:"operation"`
+	Steps      []string `json:"steps"`
+	Summary    Summary  `json:"summary"`
 }

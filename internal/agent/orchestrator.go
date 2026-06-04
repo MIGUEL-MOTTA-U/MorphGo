@@ -23,7 +23,8 @@ func Run(inputPath, task, target string) (telemetry.RunLog, error) {
 	}
 
 	// 2. Plan
-	plan, err := schema.InferPlan(task, summary, target)
+	outputPath := fmt.Sprintf("output.%s", target)
+	plan, err := schema.InferPlan(task, summary, target, inputPath, outputPath)
 	if err != nil {
 		return log, fmt.Errorf("planning failed: %w", err)
 	}
