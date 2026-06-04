@@ -40,6 +40,13 @@ func GenerateMain(plan schema.Plan, history []Attempt) (string, error) {
 		return generateYamlToJson(plan)
 	}
 
+	if plan.Source == "xml" && plan.Target == "json" && plan.Operation == "convert" {
+		if strings.TrimSpace(plan.InputPath) == "" || strings.TrimSpace(plan.OutputPath) == "" {
+			return "", errors.New("xml to json plan requires input and output paths")
+		}
+		return generateXmlToJson(plan)
+	}
+
 	var b strings.Builder
 	b.WriteString("package main\n\n")
 	b.WriteString("import \"fmt\"\n\n")
@@ -212,34 +219,6 @@ func generateCsvToJson(plan schema.Plan) (string, error) {
 	return b.String(), nil
 }
 
-// WriteTempMain stores generated code in a temporary main.go file for the current run.
-func WriteTempMain(code string) (string, error) {
-	if strings.TrimSpace(code) == "" {
-		return "", errors.New("generated code is required")
-	}
-
-	dir, err := os.MkdirTemp("", "morphgo-*")
-	if err != nil {
-		return "", err
-	}
-
-	path := filepath.Join(dir, "main.go")
-	if err := os.WriteFile(path, []byte(code), 0o600); err != nil {
-		return "", err
-	}
-	if err := os.WriteFile(filepath.Join(dir, "go.mod"), []byte("module morphgo-temp\ngo 1.26.3\n\nrequire gopkg.in/yaml.v3 v3.0.1\n"), 0o600); err != nil {
-		return "", err
-	}
-
-	// Copy project go.sum to ensure dependencies can be resolved from cache
-	sumData, err := os.ReadFile("go.sum")
-	if err == nil {
-		_ = os.WriteFile(filepath.Join(dir, "go.sum"), sumData, 0o600)
-	}
-
-	return path, nil
-}
-
 func generateYamlToJson(plan schema.Plan) (string, error) {
 	var b strings.Builder
 	b.WriteString("package main\n\n")
@@ -275,4 +254,100 @@ func generateYamlToJson(plan schema.Plan) (string, error) {
 	b.WriteString("}\n")
 
 	return b.String(), nil
+}
+
+func generateXmlToJson(plan schema.Plan) (string, error) {
+	var b strings.Builder
+	b.WriteString("package main\n\n")
+	b.WriteString("import (\n")
+	b.WriteString("\t\"encoding/json\"\n")
+	b.WriteString("\t\"encoding/xml\"\n")
+	b.WriteString("\t\"fmt\"\n")
+	b.WriteString("\t\"os\"\n")
+	b.WriteString("\t\"io\"\n")
+	b.WriteString("\t\"strings\"\n")
+	b.WriteString(")\n\n")
+
+	b.WriteString("func run() error {\n")
+	fmt.Fprintf(&b, "\tinputPath := %q\n", plan.InputPath)
+	fmt.Fprintf(&b, "\toutputPath := %q\n", plan.OutputPath)
+
+	b.WriteString("\tf, err := os.Open(inputPath)\n")
+	b.WriteString("\tif err != nil { return err }\n")
+	b.WriteString("\tdefer f.Close()\n\n")
+
+	b.WriteString("\tvar value map[string]any\n")
+	b.WriteString("\tvalue = make(map[string]any)\n")
+	b.WriteString("\tdecoder := xml.NewDecoder(f)\n")
+	b.WriteString("\tvar current map[string]any = value\n")
+	b.WriteString("\tvar stack []map[string]any\n")
+	b.WriteString("\tvar text string\n\n")
+
+	b.WriteString("\tfor { \n")
+	b.WriteString("\t\ttok, err := decoder.Token()\n")
+	b.WriteString("\t\tif err == io.EOF { break }\n")
+	b.WriteString("\t\tif err != nil { return err }\n\n")
+	b.WriteString("\t\tswitch t := tok.(type) {\n")
+	b.WriteString("\t\tcase xml.StartElement:\n")
+	b.WriteString("\t\t\tname := t.Name.Local\n")
+	b.WriteString("\t\t\tnewNode := make(map[string]any)\n")
+	b.WriteString("\t\t\tfor _, attr := range t.Attr { newNode[ \"@\" + attr.Name.Local ] = attr.Value }\n")
+	b.WriteString("\t\t\tcurrent[name] = newNode\n")
+	b.WriteString("\t\t\tstack = append(stack, current)\n")
+	b.WriteString("\t\t\tcurrent = newNode\n")
+	b.WriteString("\t\tcase xml.EndElement:\n")
+	b.WriteString("\t\t\tif len(stack) > 0 {\n")
+	b.WriteString("\t\t\t\tcurrent = stack[len(stack)-1]\n")
+	b.WriteString("\t\t\t\tstack = stack[:len(stack)-1]\n")
+	b.WriteString("\t\t\t}\n")
+	b.WriteString("\t\tcase xml.CharData:\n")
+	b.WriteString("\t\t\ttext = strings.TrimSpace(string(t))\n")
+	b.WriteString("\t\t\tif text != \"\" {\n")
+	b.WriteString("\t\t\t\t// simplified: just put text in a key \"#text\"\n")
+	b.WriteString("\t\t\t\tcurrent[\"#text\"] = text\n")
+	b.WriteString("\t\t\t}\n")
+	b.WriteString("\t\t}\n")
+	b.WriteString("\t}\n\n")
+
+	b.WriteString("\tjsonData, err := json.MarshalIndent(value, \"\", \"  \")\n")
+	b.WriteString("\tif err != nil { return err }\n\n")
+
+	b.WriteString("\tif err := os.WriteFile(outputPath, jsonData, 0644); err != nil { return err }\n")
+	b.WriteString("\treturn nil\n")
+	b.WriteString("}\n\n")
+
+	b.WriteString("func main() {\n")
+	b.WriteString("\tif err := run(); err != nil {\n")
+	b.WriteString("\t\tfmt.Fprintf(os.Stderr, \"error: %v\\n\", err)\n")
+	b.WriteString("\t\tos.Exit(1)\n")
+	b.WriteString("\t}\n")
+	b.WriteString("}\n")
+
+	return b.String(), nil
+}
+
+func WriteTempMain(code string) (string, error) {
+	if strings.TrimSpace(code) == "" {
+		return "", errors.New("generated code is required")
+	}
+
+	dir, err := os.MkdirTemp("", "morphgo-*")
+	if err != nil {
+		return "", err
+	}
+
+	path := filepath.Join(dir, "main.go")
+	if err := os.WriteFile(path, []byte(code), 0o600); err != nil {
+		return "", err
+	}
+	if err := os.WriteFile(filepath.Join(dir, "go.mod"), []byte("module morphgo-temp\ngo 1.26.3\n\nrequire gopkg.in/yaml.v3 v3.0.1\n"), 0o600); err != nil {
+		return "", err
+	}
+
+	sumData, err := os.ReadFile("go.sum")
+	if err == nil {
+		_ = os.WriteFile(filepath.Join(dir, "go.sum"), sumData, 0o600)
+	}
+
+	return path, nil
 }

@@ -78,3 +78,26 @@ func TestRun_SuccessfulYamlToJson(t *testing.T) {
 	}
 }
 
+func TestRun_SuccessfulXmlToJson(t *testing.T) {
+	dir := t.TempDir()
+	inputPath := filepath.Join(dir, "input.xml")
+	xmlContent := `<company><employee name="ana">30</employee><employee name="beatriz">25</employee></company>`
+	if err := os.WriteFile(inputPath, []byte(xmlContent), 0o600); err != nil {
+		t.Fatalf("write input xml: %v", err)
+	}
+
+	log, err := Run(inputPath, "convert xml to json", "json")
+	if err != nil {
+		for _, att := range log.Attempts {
+			t.Logf("Attempt %d [%s] error: %s, stderr: %s", att.Number, att.Stage, att.Error, att.Stderr)
+		}
+		t.Fatalf("Run returned error: %v", err)
+	}
+	if log.Status != "success" {
+		t.Fatalf("expected success status, got %q", log.Status)
+	}
+	if log.Plan.OutputPath != "output.json" {
+		t.Fatalf("expected default output path, got %q", log.Plan.OutputPath)
+	}
+}
+
