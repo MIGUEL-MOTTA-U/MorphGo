@@ -55,3 +55,26 @@ func TestRun_SuccessfulCsvToJson(t *testing.T) {
 	}
 }
 
+func TestRun_SuccessfulYamlToJson(t *testing.T) {
+	dir := t.TempDir()
+	inputPath := filepath.Join(dir, "input.yaml")
+	yamlContent := "employees:\n  - name: ana\n    age: 30\n  - name: beatriz\n    age: 25"
+	if err := os.WriteFile(inputPath, []byte(yamlContent), 0o600); err != nil {
+		t.Fatalf("write input yaml: %v", err)
+	}
+
+	log, err := Run(inputPath, "convert yaml to json", "json")
+	if err != nil {
+		for _, att := range log.Attempts {
+			t.Logf("Attempt %d [%s] error: %s, stderr: %s", att.Number, att.Stage, att.Error, att.Stderr)
+		}
+		t.Fatalf("Run returned error: %v", err)
+	}
+	if log.Status != "success" {
+		t.Fatalf("expected success status, got %q", log.Status)
+	}
+	if log.Plan.OutputPath != "output.json" {
+		t.Fatalf("expected default output path, got %q", log.Plan.OutputPath)
+	}
+}
+

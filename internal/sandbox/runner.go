@@ -37,6 +37,11 @@ func RunMain(mainPath string, timeout time.Duration) (Result, error) {
 }
 
 func buildBinary(ctx context.Context, dir, binPath string) error {
+	// Ensure dependencies are resolved
+	tidyCmd := exec.CommandContext(ctx, "go", "mod", "tidy")
+	tidyCmd.Dir = dir
+	_ = tidyCmd.Run()
+
 	cmd := exec.CommandContext(ctx, "go", "build", "-o", binPath, ".")
 	cmd.Dir = dir
 	out, err := cmd.CombinedOutput()

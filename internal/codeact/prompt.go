@@ -33,6 +33,13 @@ func GenerateMain(plan schema.Plan, history []Attempt) (string, error) {
 		return generateCsvToJson(plan)
 	}
 
+	if plan.Source == "yaml" && plan.Target == "json" && plan.Operation == "convert" {
+		if strings.TrimSpace(plan.InputPath) == "" || strings.TrimSpace(plan.OutputPath) == "" {
+			return "", errors.New("yaml to json plan requires input and output paths")
+		}
+		return generateYamlToJson(plan)
+	}
+
 	var b strings.Builder
 	b.WriteString("package main\n\n")
 	b.WriteString("import \"fmt\"\n\n")
@@ -220,8 +227,52 @@ func WriteTempMain(code string) (string, error) {
 	if err := os.WriteFile(path, []byte(code), 0o600); err != nil {
 		return "", err
 	}
-	if err := os.WriteFile(filepath.Join(dir, "go.mod"), []byte("module morphgo-temp\ngo 1.26.3\n"), 0o600); err != nil {
+	if err := os.WriteFile(filepath.Join(dir, "go.mod"), []byte("module morphgo-temp\ngo 1.26.3\n\nrequire gopkg.in/yaml.v3 v3.0.1\n"), 0o600); err != nil {
 		return "", err
 	}
+
+	// Copy project go.sum to ensure dependencies can be resolved from cache
+	sumData, err := os.ReadFile("go.sum")
+	if err == nil {
+		_ = os.WriteFile(filepath.Join(dir, "go.sum"), sumData, 0o600)
+	}
+
 	return path, nil
+}
+
+func generateYamlToJson(plan schema.Plan) (string, error) {
+	var b strings.Builder
+	b.WriteString("package main\n\n")
+	b.WriteString("import (\n")
+	b.WriteString("\t\"encoding/json\"\n")
+	b.WriteString("\t\"fmt\"\n")
+	b.WriteString("\t\"os\"\n")
+	b.WriteString("\t\"gopkg.in/yaml.v3\"\n")
+	b.WriteString(")\n\n")
+
+	b.WriteString("func run() error {\n")
+	fmt.Fprintf(&b, "\tinputPath := %q\n", plan.InputPath)
+	fmt.Fprintf(&b, "\toutputPath := %q\n", plan.OutputPath)
+
+	b.WriteString("\tdata, err := os.ReadFile(inputPath)\n")
+	b.WriteString("\tif err != nil { return err }\n\n")
+
+	b.WriteString("\tvar value any\n")
+	b.WriteString("\tif err := yaml.Unmarshal(data, &value); err != nil { return err }\n\n")
+
+	b.WriteString("\tjsonData, err := json.MarshalIndent(value, \"\", \"  \")\n")
+	b.WriteString("\tif err != nil { return err }\n\n")
+
+	b.WriteString("\tif err := os.WriteFile(outputPath, jsonData, 0644); err != nil { return err }\n")
+	b.WriteString("\treturn nil\n")
+	b.WriteString("}\n\n")
+
+	b.WriteString("func main() {\n")
+	b.WriteString("\tif err := run(); err != nil {\n")
+	b.WriteString("\t\tfmt.Fprintf(os.Stderr, \"error: %v\\n\", err)\n")
+	b.WriteString("\t\tos.Exit(1)\n")
+	b.WriteString("\t}\n")
+	b.WriteString("}\n")
+
+	return b.String(), nil
 }
