@@ -318,8 +318,8 @@ Hacer que el código generado no sea solo un placeholder educativo, sino que rea
 
 ### Pruebas mínimas
 - [x] Test de ejecución E2E que verifique la creación del archivo de salida real.
-- [ ] Test de integridad: validar que los datos en el output coincidan con el input.
-- [ ] Test de transformación con tipos de datos complejos (arrays anidados, nulos).
+- [x] Test de integridad: validar que los datos en el output coincidan con el input.
+- [x] Test de transformación con tipos de datos complejos (arrays anidados, nulos).
 
 ### Criterio de salida
 El agente genera artefactos de salida reales y válidos que contienen los datos transformados correctamente.
@@ -400,10 +400,10 @@ Este bloque sirve para que cualquier agente pueda leer el archivo, ubicar el est
 
 ## Estado actual
 - Etapa actual: `ETAPA_7`
-- Subtarea actual: implementar transformación de XML a JSON
-- Última acción realizada: completar e2e de XML a JSON
+- Subtarea actual: completar validación de integridad de datos
+- Última acción realizada: implementar tests de integridad compleja y corregir generador XML
 - Último error relevante: `ninguno`
-- Próximo paso: validar integridad de datos en transformaciones complejas.
+- Próximo paso: revisar manejo de errores de I/O en código generado
 - Bloqueos: `ninguno`
 
 ## Formato de actualización
@@ -412,12 +412,13 @@ Cada vez que se avance, actualizar este bloque con información concreta.
 
 ```text
 [IA-STEP]
-fecha: 2026-06-04
+fecha: 2026-06-06
 etapa: ETAPA_7
-subtarea: implementar transformación de XML a JSON
+subtarea: completar validación de integridad de datos
 estado: completado
-resultado: `Run` ahora soporta conversión real de XML a JSON; tests E2E en `internal/agent` en verde.
-siguiente: validar integridad de datos en transformaciones complejas.
+resultado: Tests de integridad compleja para JSON/YAML/XML/CSV en verde; mejoras en inspector JSON y generador XML.
+siguiente: revisar manejo de errores de I/O en código generado y dar por cerrada la Etapa 7.
 bloqueos: ninguno
 [/IA-STEP]
 ```
+
