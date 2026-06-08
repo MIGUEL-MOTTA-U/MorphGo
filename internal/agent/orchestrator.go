@@ -3,6 +3,8 @@ package agent
 import (
 	"fmt"
 	"time"
+	"path/filepath"
+	"strings"
 
 	"morphgo/internal/codeact"
 	"morphgo/internal/schema"
@@ -22,9 +24,30 @@ func Run(inputPath, task, target string) (telemetry.RunLog, error) {
 		return log, fmt.Errorf("inspection failed: %w", err)
 	}
 
+	// Normalize target format
+	rawTarget := strings.ToLower(target)
+	internalTarget := rawTarget
+	outputExt := rawTarget
+	switch rawTarget {
+	case "md", "markdown":
+		internalTarget = "markdown"
+		outputExt = "md"
+	case "xlsx", "excel":
+		internalTarget = "excel"
+		outputExt = "xlsx"
+	case "cvs":
+		internalTarget = "csv"
+		outputExt = "csv"
+	}
+
 	// 2. Plan
-	outputPath := fmt.Sprintf("output.%s", target)
-	plan, err := schema.InferPlan(task, summary, target, inputPath, outputPath)
+	absInputPath, err := filepath.Abs(inputPath)
+	if err != nil {
+		return log, fmt.Errorf("failed to resolve absolute input path: %w", err)
+	}
+	outputDir := filepath.Dir(absInputPath)
+	outputPath := filepath.Join(outputDir, fmt.Sprintf("output.%s", outputExt))
+	plan, err := schema.InferPlan(task, summary, internalTarget, absInputPath, outputPath)
 	if err != nil {
 		return log, fmt.Errorf("planning failed: %w", err)
 	}
@@ -40,6 +63,7 @@ func Run(inputPath, task, target string) (telemetry.RunLog, error) {
 		return log, fmt.Errorf("execution failed: %w", err)
 	}
 
+	fmt.Printf("Output saved to: %s\n", outputPath)
 	log.Status = "success"
 	return log, nil
 }

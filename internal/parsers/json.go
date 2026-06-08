@@ -27,19 +27,8 @@ func InspectJSON(path string) (schema.Summary, error) {
 			summary.Columns = append(summary.Columns, key)
 		}
 		summary.HasHeader = true
-		// If it's a map with only one key and that key is an array, inspect the array
-		if len(v) == 1 {
-			for _, val := range v {
-				if arr, ok := val.([]any); ok && len(arr) > 0 {
-					if first, ok := arr[0].(map[string]any); ok {
-						summary.Columns = make([]string, 0, len(first))
-						for k := range first {
-							summary.Columns = append(summary.Columns, k)
-						}
-					}
-				}
-			}
-		}
+		// Search for the first array of objects to get better columns
+		findArrayOfObjects(v, &summary)
 	case []any:
 		summary.Rows = len(v)
 		if len(v) > 0 {
@@ -57,4 +46,20 @@ func InspectJSON(path string) (schema.Summary, error) {
 	}
 
 	return summary, nil
+}
+
+func findArrayOfObjects(m map[string]any, summary *schema.Summary) {
+	for _, val := range m {
+		if arr, ok := val.([]any); ok && len(arr) > 0 {
+			if first, ok := arr[0].(map[string]any); ok {
+				summary.Columns = make([]string, 0, len(first))
+				for k := range first {
+					summary.Columns = append(summary.Columns, k)
+				}
+				return
+			}
+		} else if nested, ok := val.(map[string]any); ok {
+			findArrayOfObjects(nested, summary)
+		}
+	}
 }

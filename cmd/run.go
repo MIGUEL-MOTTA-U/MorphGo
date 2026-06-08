@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"morphgo/internal/agent"
 	"morphgo/internal/telemetry"
@@ -15,29 +16,46 @@ func newRunCmd() *cobra.Command {
 		Use:   "run",
 		Short: "Execute the agent run pipeline",
 		RunE: func(cmd *cobra.Command, args []string) error {
-		fmt.Printf("Starting run: %s -> %s (task: %s)\n", inputPath, targetFormat, taskStr)
+			targets := strings.Split(targetFormat, ",")
+			var lastErr error
 
-		log, err := agent.Run(inputPath, taskStr, targetFormat)
+			for _, t := range targets {
+				t = strings.TrimSpace(t)
+				if t == "" {
+					continue
+				}
 
-		// Always try to save the trace
-		traceDir := "runs"
-		if outputPath != "" {
-			traceDir = outputPath
-		}
+				fmt.Printf("\n--- Starting run: %s -> %s (task: %s) ---\n", inputPath, t, taskStr)
 
-		saveDir, saveErr := telemetry.SaveRun(traceDir, log)
-		if saveErr != nil {
-			fmt.Fprintf(os.Stderr, "Warning: failed to save run trace: %v\n", saveErr)
-		} else {
-			fmt.Printf("Trace saved to: %s\n", saveDir)
-		}
+				log, err := agent.Run(inputPath, taskStr, t)
 
-		if err != nil {
-			return fmt.Errorf("run failed: %w", err)
-		}
+				// Always try to save the trace
+				traceDir := "runs"
+				if outputPath != "" {
+					traceDir = outputPath
+				}
 
-		fmt.Println("Run completed successfully!")
-		return nil
+				saveDir, saveErr := telemetry.SaveRun(traceDir, log)
+				if saveErr != nil {
+					fmt.Fprintf(os.Stderr, "Warning: failed to save run trace: %v\n", saveErr)
+				} else {
+					fmt.Printf("Trace saved to: %s\n", saveDir)
+				}
+
+				if err != nil {
+					fmt.Fprintf(os.Stderr, "Error: run failed for target %s: %v\n", t, err)
+					lastErr = err
+					continue
+				}
+
+				fmt.Printf("Run completed successfully for target %s!\n", t)
+			}
+
+			if lastErr != nil {
+				return fmt.Errorf("one or more runs failed (last error: %w)", lastErr)
+			}
+
+			return nil
 		},
 	}
 }
