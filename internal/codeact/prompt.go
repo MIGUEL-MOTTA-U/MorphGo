@@ -1322,7 +1322,15 @@ func xmlToMap(d *xml.Decoder) (map[string]interface{}, error) {
 		switch el := t.(type) {
 		case xml.StartElement:
 			v, _ := xmlToMap(d)
-			m[el.Name.Local] = v
+			if existing, ok := m[el.Name.Local]; ok {
+				if list, ok := existing.([]interface{}); ok {
+					m[el.Name.Local] = append(list, v)
+				} else {
+					m[el.Name.Local] = []interface{}{existing, v}
+				}
+			} else {
+				m[el.Name.Local] = v
+			}
 		case xml.EndElement: return m, nil
 		case xml.CharData: if s := strings.TrimSpace(string(el)); s != "" { m["#text"] = s }
 		}
@@ -1334,14 +1342,18 @@ func extractList(v interface{}) []interface{} {
 	switch val := v.(type) {
 	case []interface{}: return val
 	case map[string]interface{}:
-		for _, sub := range val {
-			if list, ok := sub.([]interface{}); ok { return list }
-			if m, ok := sub.(map[string]interface{}); ok {
-				if list := extractList(m); list != nil { return list }
+		if len(val) == 1 {
+			for _, sub := range val {
+				if list, ok := sub.([]interface{}); ok { return list }
+				if m, ok := sub.(map[string]interface{}); ok {
+					if list := extractList(m); list != nil { return list }
+				}
 			}
 		}
+		// If no clear list found, treat the whole map as a single item list if it has data
+		return []interface{}{val}
 	}
-	return nil
+	return []interface{}{}
 }
 `
 
@@ -1353,8 +1365,10 @@ func extractList(v interface{}) []interface{} {
 		for _, sub := range val {
 			if list, ok := sub.([]interface{}); ok { return list }
 		}
+		// If no list found, treat the whole map as a single item list
+		return []interface{}{val}
 	}
-	return nil
+	return []interface{}{}
 }
 `
 
