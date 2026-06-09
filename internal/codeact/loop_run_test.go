@@ -11,17 +11,19 @@ import (
 
 func TestRunPlan_Success(t *testing.T) {
 	plan := schema.Plan{
-		Objective: "convert json to csv",
-		Source:    "json",
-		Target:    "csv",
-		Operation: "placeholder",
+		Objective:  "convert unknown to something",
+		Source:     "unknown",
+		Target:     "something",
+		Operation:  "placeholder",
+		InputPath:  "in.txt",
+		OutputPath: "out.txt",
 	}
 
 	res, err := RunPlan(plan, 5*time.Second)
 	if err != nil {
 		t.Fatalf("RunPlan returned error: %v", err)
 	}
-	if !strings.Contains(res.Stdout, "execute placeholder from json to csv") {
+	if !strings.Contains(res.Stdout, "execute placeholder from unknown to something") {
 		t.Fatalf("unexpected stdout: %q", res.Stdout)
 	}
 }

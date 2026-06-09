@@ -414,10 +414,10 @@ Cada vez que se avance, actualizar este bloque con información concreta.
 [IA-STEP]
 fecha: 2026-06-08
 etapa: ETAPA_7
-subtarea: fix XML to MD file generation (no panic)
+subtarea: improve XLSX and XML transformation robustness
 estado: completado
-resultado: Modified extractList functions in xmlHelpers and jsonHelpers to return empty slice instead of nil, preventing panic in generated code. XML to MD now generates a file (content may need improvement).
-siguiente: investigate XLSX transformation errors and improve XML content extraction for markdown and other formats.
+resultado: Enhanced Excel inspector to extract headers, added proper error handling to all Excel generators, updated excelize to v2.10.1 in sandbox, and improved XML/JSON to MD error reporting. All tests green.
+siguiente: finalize Etapa 7 by reviewing remaining I/O error edge cases in generated code.
 bloqueos: ninguno
 [/IA-STEP]
 ```

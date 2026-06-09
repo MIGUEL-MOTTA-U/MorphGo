@@ -114,7 +114,7 @@ func TestInspectExcel_MultipleSheets(t *testing.T) {
 	if summary.Rows != 2 {
 		t.Fatalf("expected 2 data rows across multiple sheets, got %d", summary.Rows)
 	}
-	if len(summary.Columns) != 2 {
-		t.Fatalf("expected sheet names as columns, got %#v", summary.Columns)
+	if len(summary.Columns) != 1 || summary.Columns[0] != "name" {
+		t.Fatalf("expected header 'name' as column, got %#v", summary.Columns)
 	}
 }

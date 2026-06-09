@@ -29,17 +29,18 @@ func InspectExcel(path string) (schema.Summary, error) {
 	}
 
 	summary.HasHeader = true
-	summary.Columns = append(summary.Columns, sheets...)
+	// Use headers from the first sheet as columns
+	if rows, err := f.GetRows(sheets[0]); err == nil && len(rows) > 0 {
+		summary.Columns = rows[0]
+	}
 
 	for _, sheet := range sheets {
 		rows, err := f.GetRows(sheet)
 		if err != nil {
 			return schema.Summary{}, err
 		}
-		if len(rows) > 0 {
-			if len(rows) > 1 {
-				summary.Rows += len(rows) - 1
-			}
+		if len(rows) > 1 {
+			summary.Rows += len(rows) - 1
 		}
 	}
 

@@ -37,8 +37,8 @@ func TestGenerateMain_KnownPlan(t *testing.T) {
 	if !strings.Contains(code, "func run() error") {
 		t.Fatal("expected run helper")
 	}
-	if count := strings.Count(code, "func "); count != 2 {
-		t.Fatalf("expected exactly 2 functions, got %d", count)
+	if count := strings.Count(code, "func "); count != 3 {
+		t.Fatalf("expected exactly 3 functions, got %d", count)
 	}
 }
 

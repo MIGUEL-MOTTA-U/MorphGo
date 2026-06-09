@@ -74,8 +74,8 @@ func TestInspectJSON_ArrayOfObjects(t *testing.T) {
 	if summary.Rows != 2 {
 		t.Fatalf("expected 2 rows, got %d", summary.Rows)
 	}
-	if summary.HasHeader {
-		t.Fatal("expected array of objects not to be marked as headered")
+	if !summary.HasHeader {
+		t.Fatal("expected array of objects to be marked as headered")
 	}
 }
 
